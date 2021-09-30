@@ -1,0 +1,156 @@
+{
+  "version": "0.1.0",
+  "scripts": {
+    "build": "lundle build",
+    "check-types": "lundle check-types",
+    "dev": "lundle build -f module,cjs -w",
+    "format": "prettier --write \"{,!(node_modules|dist|coverage)/**/}*.{ts,js,md,yml,json}\"",
+    "lint": "eslint . --ext .ts",
+    "test": "jest",
+    "validate": "lundle check-types && pnpm run lint && jest --coverage"
+  },
+  "keywords": [
+    "react native"
+  ],
+  "author": "Jared Lunde <jared.lunde@gmail.com> (https://jaredlunde.com/)",
+  "license": "MIT",
+  "devDependencies": {
+    "@lunde/create-pkg": "link:/Users/jared/.pnpm-store/v3/tmp/_npx/42116/5/node_modules/.pnpm/@lunde+create-pkg@1.7.0/node_modules/@lunde/create-pkg/",
+    "@commitlint/cli": "latest",
+    "@commitlint/config-conventional": "latest",
+    "@semantic-release/changelog": "^6.0.0",
+    "@semantic-release/git": "^10.0.0",
+    "@swc-node/core": "^1.6.0",
+    "@swc-node/jest": "^1.3.2",
+    "cli-confirm": "latest",
+    "cz-conventional-changelog": "latest",
+    "eslint": "latest",
+    "eslint-config-lunde": "latest",
+    "husky": "latest",
+    "jest": "latest",
+    "lint-staged": "latest",
+    "lundle": "latest",
+    "prettier": "latest",
+    "@types/jest": "latest",
+    "typescript": "latest"
+  },
+  "dependencies": {},
+  "peerDependencies": {},
+  "name": "@dash-ui/react-native",
+  "homepage": "https://github.com/dash-ui/react-native#readme",
+  "repository": "github:dash-ui/react-native",
+  "bugs": "https://github.com/dash-ui/react-native/issues",
+  "description": "Use your @dash-ui styles in react-native",
+  "main": "dist/main/index.js",
+  "module": "dist/module/index.js",
+  "unpkg": "dist/umd/react-native.js",
+  "source": "src/index.ts",
+  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "browser": "./dist/module/index.js",
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/main/index.js",
+      "umd": "./dist/umd/react-native.js",
+      "source": "./src/index.ts",
+      "types": "./types/index.d.ts",
+      "default": "./dist/main/index.js"
+    },
+    "./package.json": "./package.json",
+    "./": "./"
+  },
+  "files": [
+    "/dist",
+    "/src",
+    "/types"
+  ],
+  "sideEffects": false,
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "**/*.{ts,js}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.{md,yml,json}": [
+      "prettier --write"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "eslintConfig": {
+    "extends": [
+      "lunde"
+    ]
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "coverage",
+    "dist",
+    "/types",
+    "test",
+    "*.config.js"
+  ],
+  "jest": {
+    "transform": {
+      "^.+\\.(t|j)s?$": [
+        "@swc-node/jest"
+      ]
+    },
+    "moduleDirectories": [
+      "node_modules",
+      "src",
+      "test"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/?(*.)test.ts"
+    ],
+    "collectCoverageFrom": [
+      "**/src/**/*.ts"
+    ],
+    "setupFilesAfterEnv": [
+      "./test/setup.ts"
+    ],
+    "snapshotResolver": "./test/resolve-snapshot.js",
+    "globals": {
+      "__DEV__": true
+    }
+  },
+  "release": {
+    "branches": [
+      "main",
+      "next",
+      "alpha"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "types",
+            "CHANGELOG.md",
+            "package.json"
+          ],
+          "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
+        }
+      ],
+      "@semantic-release/npm",
+      "@semantic-release/github"
+    ]
+  }
+}

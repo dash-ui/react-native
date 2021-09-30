@@ -1,0 +1,7 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@lunde/create-pkg': link:/Users/jared/.pnpm-store/v3/tmp/_npx/42116/5/node_modules/.pnpm/@lunde+create-pkg@1.7.0/node_modules/@lunde/create-pkg/
+
+devDependencies:
+  '@lunde/create-pkg': link:../../../../.pnpm-store/v3/tmp/_npx/42116/5/node_modules/.pnpm/@lunde+create-pkg@1.7.0/node_modules/@lunde/create-pkg
