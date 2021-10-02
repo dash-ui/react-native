@@ -10,6 +10,9 @@
     "validate": "lundle check-types && pnpm run lint && jest --coverage"
   },
   "keywords": [
+    "react native styles",
+    "dash react native",
+    "styled components react native",
     "react native"
   ],
   "author": "Jared Lunde <jared.lunde@gmail.com> (https://jaredlunde.com/)",
@@ -39,7 +42,6 @@
     "react": "^17.0.2",
     "react-native": "^0.65.1",
     "react-test-renderer": "^17.0.2",
-    "ts-jest": "^27.0.5",
     "typescript": "latest"
   },
   "name": "@dash-ui/react-native",

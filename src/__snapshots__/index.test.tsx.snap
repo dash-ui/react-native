@@ -17,10 +17,7 @@ Object {
 
 exports[`styles() should too pass 2 1`] = `
 Object {
-  "marginBottom": 1,
-  "marginLeft": 1,
-  "marginRight": 1,
-  "marginTop": 1,
+  "margin": 1,
 }
 `;
 

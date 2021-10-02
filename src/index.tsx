@@ -3,7 +3,7 @@ import cssToRN from "css-to-react-native";
 import * as React from "react";
 import * as RN from "react-native";
 import type { O } from "ts-toolbelt";
-import type { JsonObject, JsonValue, LiteralUnion } from "type-fest";
+import type { JsonObject, JsonValue } from "type-fest";
 
 const emptyObj = {};
 
@@ -12,15 +12,21 @@ export function createStyles<
   T extends DashThemes = DashThemes
 >(options: CreateStylesOptions<V, T> = emptyObj) {
   const themes = options.themes ?? (emptyObj as T);
-  const initialTokens = options.tokens ?? ({} as V);
-  let tokens = initialTokens;
-  if (options.themes) mergeTokens(tokens, Object.values(themes)[0] ?? {});
-  const generated = new Map<string, StyleObject>();
+  let currentTheme: keyof T | "default" = "default";
+  const tokens = {
+    default: options.tokens ?? emptyObj,
+  } as Record<keyof T | "default", V>;
 
-  if (process.env.NODE_ENV !== "production") {
-    const set_ = generated.set.bind(generated);
-    generated.set = (key: string, styles: StyleObject) =>
-      set_(key, Object.freeze(styles));
+  if (options.themes) {
+    const themeNames = Object.keys(options.themes) as (keyof T)[];
+    currentTheme = themeNames[0];
+
+    for (const themeName of themeNames) {
+      tokens[themeName] = mergeTokens(
+        { ...tokens.default },
+        themes[themeName]
+      ) as V;
+    }
   }
 
   function cls<S extends AllStyles>(
@@ -33,7 +39,7 @@ export function createStyles<
   ) {
     const styles = compileStyles(
       compileLiterals(literals, ...placeholders),
-      tokens
+      tokens[currentTheme]
     );
 
     if (process.env.NODE_ENV !== "production") {
@@ -45,25 +51,18 @@ export function createStyles<
 
   const styles = Object.assign(
     function styles<T extends StyleMap<AllStyles, V>>(styleMap: T) {
-      const compiledStyleMap: StyleMapMemo<string> = new Map();
-      let styleKey: keyof typeof styleMap;
-      /* istanbul ignore next */
-      for (styleKey in styleMap)
-        compiledStyleMap.set(
-          styleKey,
-          compileStyles(styleMap[styleKey] ?? emptyObj, tokens)
-        );
-
       // style('text', {})
       function style(...args: StyleArguments<Extract<keyof T, string>>) {
-        const key = JSON.stringify(args);
-        const rules = generated.get(key);
-        if (rules) return rules;
         const numArgs = args.length;
-        const sheet = compiledStyleMap.get("default") ?? {};
+        const sheet = styleMap.default
+          ? compileStyles(styleMap.default, tokens[currentTheme])
+          : {};
 
         if (numArgs === 1 && typeof args[0] === "string") {
-          Object.assign(sheet, compiledStyleMap.get(args[0]));
+          Object.assign(
+            sheet,
+            compileStyles(styleMap[args[0]], tokens[currentTheme])
+          );
         } else if (numArgs > 0) {
           let i = 0;
           let arg;
@@ -72,16 +71,24 @@ export function createStyles<
             arg = args[i];
 
             if (typeof arg === "string") {
-              Object.assign(sheet, compiledStyleMap.get(arg));
+              Object.assign(
+                sheet,
+                compileStyles(styleMap[arg], tokens[currentTheme])
+              );
             } else if (typeof arg === "object") {
               for (const key in arg)
-                if (arg[key]) Object.assign(sheet, compiledStyleMap.get(key));
+                if (arg[key])
+                  Object.assign(
+                    sheet,
+                    compileStyles(styleMap[key], tokens[currentTheme])
+                  );
             }
           }
         }
 
-        generated.set(key, sheet);
-        return sheet;
+        return process.env.NODE_ENV !== "production"
+          ? Object.freeze(sheet)
+          : sheet;
       }
 
       style.styles = styleMap;
@@ -98,7 +105,7 @@ export function createStyles<
       ) {
         const styles = compileStyles(
           compileLiterals(literals, ...placeholders),
-          tokens
+          tokens[currentTheme]
         );
 
         return Object.assign(
@@ -115,21 +122,14 @@ export function createStyles<
           value: Value
         ) => string | StyleCallback<S, V> | StyleObject<S>
       ) {
-        const cache = new Map<string | Value, StyleObject>();
-
         return function (value?: Value) {
           if (!value) return emptyObj;
-          const key = typeof value === "object" ? JSON.stringify(value) : value;
-          const cached = cache.get(key);
-          if (cached) return cached;
-
-          let styles = compileStyles(lazyFn(value), tokens);
+          let styles = compileStyles(lazyFn(value), tokens[currentTheme]);
 
           if (process.env.NODE_ENV !== "production") {
             styles = Object.freeze(styles);
           }
 
-          cache.set(key, styles);
           return styles;
         };
       },
@@ -137,12 +137,12 @@ export function createStyles<
         return cls("".concat(...css));
       },
       tokens,
-      themes,
     } as const
   );
 
   const DashContext = React.createContext({
     styles,
+    theme: currentTheme,
     setTheme(theme: keyof T) {
       console.error("DashContext was consumed outside of a Provider");
     },
@@ -174,11 +174,11 @@ export function createStyles<
       >,
       ref
     ) {
-      useDash();
-      const baseStyle = compileStyles(styles, tokens);
+      const { theme } = useDash();
+      const baseStyle = compileStyles(styles, tokens[theme]);
       const outerStyle =
         typeof style === "function" || typeof style === "string"
-          ? compileStyles(style, tokens)
+          ? compileStyles(style, tokens[theme])
           : style;
 
       return (
@@ -289,15 +289,22 @@ export function createStyles<
       children?: React.ReactNode;
     }) {
       const colorScheme = RN.useColorScheme();
-      const [theme, setTheme] = React.useState<keyof T>(() => {
-        if (defaultTheme) return defaultTheme;
-        if (colorScheme && colorScheme in themes) return colorScheme as keyof T;
-        return Object.keys(themes)[0] as keyof T;
+      const [theme, setTheme] = React.useState<keyof T | "default">(() => {
+        if (defaultTheme) {
+          currentTheme = defaultTheme;
+          return defaultTheme;
+        }
+
+        if (colorScheme && colorScheme in themes) {
+          currentTheme = colorScheme as keyof T;
+          return colorScheme as keyof T;
+        }
+
+        return currentTheme;
       });
 
       React.useLayoutEffect(() => {
-        if (theme)
-          tokens = mergeTokens({ ...initialTokens }, themes[theme]) as V;
+        if (theme) currentTheme = theme;
       }, [theme]);
 
       React.useLayoutEffect(() => {
@@ -307,7 +314,7 @@ export function createStyles<
           "light" in themes &&
           "dark" in themes
         ) {
-          tokens = mergeTokens({ ...initialTokens }, themes[colorScheme]);
+          currentTheme = colorScheme as keyof T;
         }
       }, [colorScheme]);
 
@@ -379,7 +386,7 @@ export function compileStyles<V extends DashTokens = DashTokens>(
   }
 }
 
-const compileCache = new Map<DashTokens, Map<string, StyleObject>>();
+const compileCache = new WeakMap<DashTokens, Map<string, StyleObject>>();
 
 function mergeTokens<T extends JsonObject, U extends JsonObject>(
   target: T,
@@ -432,8 +439,6 @@ export interface CreateStylesOptions<
 export type StyleMap<S extends AllStyles, V extends DashTokens = DashTokens> = {
   [name: string]: string | StyleCallback<S, V> | StyleObject<S>;
 };
-
-type StyleMapMemo<N extends string> = Map<N | "default", StyleObject>;
 
 export type StyleValue<
   S extends AllStyles = AllStyles,
