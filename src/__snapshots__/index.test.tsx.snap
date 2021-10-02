@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`styles() should pass 1`] = `
+Object {
+  "color": "red",
+}
+`;
+
+exports[`styles() should too pass 1`] = `
+Object {
+  "color": "red",
+}
+`;
+
+exports[`styles() should too pass 2 1`] = `
+Object {
+  "color": "red",
+}
+`;
+
+exports[`styles() should too pass 3 1`] = `
+Object {
+  "color": "blue",
+  "margin": "1px",
+}
+`;
+
+exports[`styles.cls() should pass 1`] = `
+Object {
+  "color": "red",
+}
+`;
+
+exports[`styles.one() should pass 1`] = `
+Object {
+  "color": "red",
+}
+`;
