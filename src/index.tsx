@@ -3,7 +3,7 @@ import cssToRN from "css-to-react-native";
 import * as React from "react";
 import * as RN from "react-native";
 import type { O } from "ts-toolbelt";
-import type { JsonObject, JsonValue } from "type-fest";
+import type { JsonObject, JsonValue, LiteralUnion } from "type-fest";
 
 const emptyObj = {};
 
@@ -23,8 +23,12 @@ export function createStyles<
       set_(key, Object.freeze(styles));
   }
 
-  function cls(
-    literals: TemplateStringsArray | string | StyleObject | StyleCallback<V>,
+  function cls<S extends AllStyles>(
+    literals:
+      | TemplateStringsArray
+      | string
+      | StyleObject<S>
+      | StyleCallback<S, V>,
     ...placeholders: string[]
   ) {
     const styles = compileStyles(
@@ -40,7 +44,7 @@ export function createStyles<
   }
 
   const styles = Object.assign(
-    function styles<N extends string>(styleMap: StyleMap<N, V>) {
+    function styles<T extends StyleMap<AllStyles, V>>(styleMap: T) {
       const compiledStyleMap: StyleMapMemo<string> = new Map();
       let styleKey: keyof typeof styleMap;
       /* istanbul ignore next */
@@ -51,7 +55,7 @@ export function createStyles<
         );
 
       // style('text', {})
-      function style(...args: StyleArguments<N>) {
+      function style(...args: StyleArguments<Extract<keyof T, string>>) {
         const key = JSON.stringify(args);
         const rules = generated.get(key);
         if (rules) return rules;
@@ -84,12 +88,12 @@ export function createStyles<
       return style;
     },
     {
-      one(
+      one<S extends AllStyles>(
         literals:
           | TemplateStringsArray
           | string
-          | StyleObject
-          | StyleCallback<V>,
+          | StyleObject<S>
+          | StyleCallback<S, V>,
         ...placeholders: string[]
       ) {
         const styles = compileStyles(
@@ -107,7 +111,9 @@ export function createStyles<
       },
       cls,
       lazy<Value extends JsonValue>(
-        lazyFn: (value: Value) => string | StyleCallback<V> | StyleObject
+        lazyFn: <S extends AllStyles>(
+          value: Value
+        ) => string | StyleCallback<S, V> | StyleObject<S>
       ) {
         const cache = new Map<string | Value, StyleObject>();
 
@@ -150,22 +156,28 @@ export function createStyles<
   }
 
   const styled = function styled<
+    Style extends RN.ViewStyle | RN.TextStyle | RN.ImageStyle,
     Props extends {
-      style?: RN.StyleProp<StyleObject>;
+      style?: RN.StyleProp<Style>;
     }
-  >(Component: React.ComponentType<Props>, styles?: StyleValue<V>) {
-    const style_ = compileStyles(styles, tokens);
-
+  >(
+    Component: React.ComponentType<Props>,
+    styles?: Extract<Props["style"], Style>
+  ) {
     const RefForwardingComponent = React.forwardRef(function StyledComponent(
       {
         style,
         ...props
-      }: O.Overwrite<Props, { style?: RN.StyleProp<StyleValue> }>,
+      }: O.Overwrite<
+        Props,
+        { style?: StyleValue<Extract<Props["style"], Style>, V> }
+      >,
       ref
     ) {
       useDash();
-      const propsStyle =
-        typeof style === "function" || style === "string"
+      const baseStyle = compileStyles(styles, tokens);
+      const outerStyle =
+        typeof style === "function" || typeof style === "string"
           ? compileStyles(style, tokens)
           : style;
 
@@ -173,11 +185,11 @@ export function createStyles<
         <Component
           {...(props as unknown as Props)}
           style={
-            propsStyle && style_
-              ? RN.StyleSheet.flatten([style_, propsStyle])
-              : propsStyle
-              ? propsStyle
-              : style_
+            outerStyle && baseStyle
+              ? RN.StyleSheet.flatten([baseStyle, outerStyle])
+              : outerStyle
+              ? outerStyle
+              : baseStyle
           }
           ref={ref}
         />
@@ -193,32 +205,81 @@ export function createStyles<
     return RefForwardingComponent;
   };
 
-  styled.ActivityIndicator = styled(RN.ActivityIndicator);
-  styled.DrawerLayoutAndroid = styled(RN.DrawerLayoutAndroid);
-  styled.FlatList = styled(RN.FlatList);
-  styled.Image = styled(RN.Image);
-  styled.ImageBackground = styled(RN.ImageBackground);
-  styled.KeyboardAvoidingView = styled(RN.KeyboardAvoidingView);
-  styled.Modal = styled(RN.Modal);
-  styled.NavigatorIOS = styled(RN.NavigatorIOS);
-  styled.RecyclerViewBackedScrollView = styled(RN.RecyclerViewBackedScrollView);
-  styled.RefreshControl = styled(RN.RefreshControl);
-  styled.SafeAreaView = styled(RN.SafeAreaView);
-  styled.ScrollView = styled(RN.ScrollView);
-  styled.SectionList = styled(RN.SectionList);
-  styled.SnapshotViewIOS = styled(RN.SnapshotViewIOS);
-  styled.Switch = styled(RN.Switch);
-  styled.Text = styled(RN.Text);
-  styled.TextInput = styled(RN.TextInput);
-  styled.TouchableHighlight = styled(RN.TouchableHighlight);
-  styled.TouchableNativeFeedback = styled(RN.TouchableNativeFeedback);
-  styled.TouchableOpacity = styled(RN.TouchableOpacity);
-  styled.TouchableWithoutFeedback = styled(RN.TouchableWithoutFeedback);
-  styled.View = styled(RN.View);
+  function wrapStyled<
+    Style extends RN.ViewStyle | RN.TextStyle | RN.ImageStyle,
+    Props extends {
+      style?: RN.StyleProp<Style>;
+    }
+  >(Component: React.ComponentType<Props>) {
+    return function styledWrapper(
+      literals:
+        | TemplateStringsArray
+        | string
+        | StyleObject<Extract<Props["style"], Style>>
+        | StyleCallback<Extract<Props["style"], Style>, V>,
+      ...placeholders: string[]
+    ) {
+      return styled(
+        Component,
+        Array.isArray(literals)
+          ? compileLiterals(literals, ...placeholders)
+          : literals
+      );
+    };
+  }
+
+  styled.ActivityIndicator = wrapStyled(RN.ActivityIndicator);
+  styled.DrawerLayoutAndroid = wrapStyled(RN.DrawerLayoutAndroid);
+  styled.FlatList = wrapStyled(RN.FlatList);
+  styled.Image = wrapStyled(RN.Image);
+  styled.ImageBackground = wrapStyled(RN.ImageBackground);
+  styled.KeyboardAvoidingView = wrapStyled(RN.KeyboardAvoidingView);
+  styled.Modal = wrapStyled(RN.Modal);
+  styled.NavigatorIOS = wrapStyled(RN.NavigatorIOS);
+  styled.RecyclerViewBackedScrollView = wrapStyled(
+    RN.RecyclerViewBackedScrollView
+  );
+  styled.RefreshControl = wrapStyled(RN.RefreshControl);
+  styled.SafeAreaView = wrapStyled(RN.SafeAreaView);
+  styled.ScrollView = wrapStyled(RN.ScrollView);
+  styled.SectionList = wrapStyled(RN.SectionList);
+  styled.SnapshotViewIOS = wrapStyled(RN.SnapshotViewIOS);
+  styled.Switch = wrapStyled(RN.Switch);
+  styled.Text = wrapStyled(RN.Text);
+  styled.TextInput = wrapStyled(RN.TextInput);
+  styled.TouchableHighlight = wrapStyled(RN.TouchableHighlight);
+  styled.TouchableNativeFeedback = wrapStyled(RN.TouchableNativeFeedback);
+  styled.TouchableOpacity = wrapStyled(RN.TouchableOpacity);
+  styled.TouchableWithoutFeedback = wrapStyled(RN.TouchableWithoutFeedback);
+  styled.View = wrapStyled(RN.View);
 
   return {
     styles,
     styled,
+    component: {
+      ActivityIndicator: styled(RN.ActivityIndicator),
+      DrawerLayoutAndroid: styled(RN.DrawerLayoutAndroid),
+      FlatList: styled(RN.FlatList),
+      Image: styled(RN.Image),
+      ImageBackground: styled(RN.ImageBackground),
+      KeyboardAvoidingView: styled(RN.KeyboardAvoidingView),
+      Modal: styled(RN.Modal),
+      NavigatorIOS: styled(RN.NavigatorIOS),
+      RecyclerViewBackedScrollView: styled(RN.RecyclerViewBackedScrollView),
+      RefreshControl: styled(RN.RefreshControl),
+      SafeAreaView: styled(RN.SafeAreaView),
+      ScrollView: styled(RN.ScrollView),
+      SectionList: styled(RN.SectionList),
+      SnapshotViewIOS: styled(RN.SnapshotViewIOS),
+      Switch: styled(RN.Switch),
+      Text: styled(RN.Text),
+      TextInput: styled(RN.TextInput),
+      TouchableHighlight: styled(RN.TouchableHighlight),
+      TouchableNativeFeedback: styled(RN.TouchableNativeFeedback),
+      TouchableOpacity: styled(RN.TouchableOpacity),
+      TouchableWithoutFeedback: styled(RN.TouchableWithoutFeedback),
+      View: styled(RN.View),
+    },
     useDash,
     Provider({
       defaultTheme,
@@ -267,7 +328,7 @@ export function createStyles<
  * @param tokens - A map of CSS tokens for style callbacks
  */
 export function compileStyles<V extends DashTokens = DashTokens>(
-  styles: StyleValue<V> | Falsy,
+  styles: StyleValue<AllStyles, V> | Falsy,
   tokens: V
 ): StyleObject {
   const value = typeof styles === "function" ? styles(tokens) : styles;
@@ -337,8 +398,15 @@ function mergeTokens<T extends JsonObject, U extends JsonObject>(
 
 const propertyValuePattern = /\s*([^\s]+)\s*:\s*(.+?)\s*$/;
 
-function compileLiterals<V extends DashTokens = DashTokens>(
-  literals: TemplateStringsArray | string | StyleObject | StyleCallback<V>,
+function compileLiterals<
+  S extends AllStyles,
+  V extends DashTokens = DashTokens
+>(
+  literals:
+    | TemplateStringsArray
+    | string
+    | StyleObject<S>
+    | StyleCallback<S, V>,
   ...replacements: string[]
 ) {
   return Array.isArray(literals)
@@ -361,25 +429,28 @@ export interface CreateStylesOptions<
   };
 }
 
-export type StyleMap<N extends string, V extends DashTokens = DashTokens> = {
-  [Name in N | "default"]?: string | StyleCallback<V> | StyleObject;
+export type StyleMap<S extends AllStyles, V extends DashTokens = DashTokens> = {
+  [name: string]: string | StyleCallback<S, V> | StyleObject<S>;
 };
 
 type StyleMapMemo<N extends string> = Map<N | "default", StyleObject>;
 
-export type StyleValue<V extends DashTokens = DashTokens> =
-  | string
-  | StyleCallback<V>
-  | StyleObject;
+export type StyleValue<
+  S extends AllStyles = AllStyles,
+  V extends DashTokens = DashTokens
+> = string | StyleCallback<S, V> | StyleObject<S>;
 
-export type StyleObject = RN.ViewStyle | RN.TextStyle | RN.ImageStyle;
+export type StyleObject<S extends AllStyles = AllStyles> = S;
 
-export type StyleCallback<V extends DashTokens = DashTokens> = (
-  tokens: V
-) => StyleObject | string;
+export type StyleCallback<
+  S extends AllStyles = AllStyles,
+  V extends DashTokens = DashTokens
+> = (tokens: V) => StyleObject<S> | string;
 
+export type AllStyles = RN.ViewStyle | RN.TextStyle | RN.ImageStyle;
 export interface DashTokens {}
 export interface DashThemes {}
+
 /**
  * The names of the themes defined in the `DashThemes` type
  */

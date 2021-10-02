@@ -22,11 +22,6 @@ module.exports = {
   collectCoverageFrom: ["<rootDir>/src/**/*.{ts,tsx}"],
   setupFilesAfterEnv: ["./test/setup.ts"],
   snapshotResolver: "./test/resolve-snapshot.js",
-  globals: {
-    "ts-jest": {
-      babelConfig: true,
-    },
-  },
   transformIgnorePatterns: [],
   // This is the only part which you can keep
   // from the above linked tutorial's config:
