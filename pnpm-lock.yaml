@@ -11,10 +11,12 @@ specifiers:
   '@testing-library/jest-native': ^4.0.2
   '@testing-library/react': ^12.1.1
   '@testing-library/react-native': ^7.2.0
+  '@types/clone-deep': ^4.0.1
   '@types/css-to-react-native': ^3.0.0
   '@types/jest': latest
   '@types/react-native': ^0.65.3
   babel-jest: ^27.2.4
+  clone-deep: ^4.0.1
   css-to-react-native: ^3.0.0
   cz-conventional-changelog: latest
   eslint: latest
@@ -48,9 +50,11 @@ devDependencies:
   '@testing-library/jest-native': 4.0.2
   '@testing-library/react': 12.1.1_react@17.0.2
   '@testing-library/react-native': 7.2.0_d5c8805a3e31afa2fdfbfdfdfb4d5711
+  '@types/clone-deep': 4.0.1
   '@types/jest': 27.0.2
   '@types/react-native': 0.65.3
   babel-jest: 27.2.4
+  clone-deep: 4.0.1
   cz-conventional-changelog: 3.3.0_typescript@4.4.3
   eslint: 7.32.0
   eslint-config-lunde: 0.5.0_eslint@7.32.0+typescript@4.4.3
@@ -2595,6 +2599,10 @@ packages:
     resolution: {integrity: sha512-K2waXdXBi2302XUdcHcR1jCeU0LL4TD9HRs/gk0N2Xvrht+G/BfJa4QObBQZfhMdxiCpV3COl5Nfq4uKTeTnJA==}
     dependencies:
       '@babel/types': 7.15.6
+    dev: true
+
+  /@types/clone-deep/4.0.1:
+    resolution: {integrity: sha512-bdkCSkyVHsgl3Goe1y16T9k6JuQx7SiDREkq728QjKmTZkGJZuS8R3gGcnGzVuGBP0mssKrzM/GlMOQxtip9cg==}
     dev: true
 
   /@types/css-to-react-native/3.0.0:
