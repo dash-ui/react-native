@@ -22,7 +22,9 @@ module.exports = {
   collectCoverageFrom: ["<rootDir>/src/**/*.{ts,tsx}"],
   setupFilesAfterEnv: ["./test/setup.ts"],
   snapshotResolver: "./test/resolve-snapshot.js",
-  transformIgnorePatterns: [],
+  transformIgnorePatterns: [
+    "node_modules/.pnpm/(?!((jest-)?react-native|@react-native(-community)?))",
+  ],
   // This is the only part which you can keep
   // from the above linked tutorial's config:
   cacheDirectory: ".jest/cache",

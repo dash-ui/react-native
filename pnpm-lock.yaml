@@ -34,7 +34,9 @@ specifiers:
   typescript: latest
 
 dependencies:
+  '@types/clone-deep': 4.0.1
   '@types/css-to-react-native': 3.0.0
+  clone-deep: 4.0.1
   css-to-react-native: 3.0.0
   ts-toolbelt: 9.6.0
   type-fest: 2.3.4
@@ -50,11 +52,9 @@ devDependencies:
   '@testing-library/jest-native': 4.0.2
   '@testing-library/react': 12.1.1_react@17.0.2
   '@testing-library/react-native': 7.2.0_d5c8805a3e31afa2fdfbfdfdfb4d5711
-  '@types/clone-deep': 4.0.1
   '@types/jest': 27.0.2
   '@types/react-native': 0.65.3
   babel-jest: 27.2.4
-  clone-deep: 4.0.1
   cz-conventional-changelog: 3.3.0_typescript@4.4.3
   eslint: 7.32.0
   eslint-config-lunde: 0.5.0_eslint@7.32.0+typescript@4.4.3
@@ -2603,7 +2603,7 @@ packages:
 
   /@types/clone-deep/4.0.1:
     resolution: {integrity: sha512-bdkCSkyVHsgl3Goe1y16T9k6JuQx7SiDREkq728QjKmTZkGJZuS8R3gGcnGzVuGBP0mssKrzM/GlMOQxtip9cg==}
-    dev: true
+    dev: false
 
   /@types/css-to-react-native/3.0.0:
     resolution: {integrity: sha512-MjLLf4YKMQYKnZ7xPZisizAiC8C5EQUKSLeimtApbc82WJDDN0TQBCY+HhWJHsSQ8Le4509aD/O7MWV73jJykQ==}
@@ -3859,7 +3859,6 @@ packages:
       is-plain-object: 2.0.4
       kind-of: 6.0.3
       shallow-clone: 3.0.1
-    dev: true
 
   /clone/1.0.4:
     resolution: {integrity: sha1-2jCcwmPfFZlMaIypAheco8fNfH4=}
@@ -5958,7 +5957,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       isobject: 3.0.1
-    dev: true
 
   /is-potential-custom-element-name/1.0.1:
     resolution: {integrity: sha512-bCYeRA2rVibKZd+s2625gGnGF/t7DSqDs4dP7CrLA1m7jKWz6pps0LpYLJN8Q64HtmPKJ1hrN3nzPNKFEKOUiQ==}
@@ -6055,7 +6053,6 @@ packages:
   /isobject/3.0.1:
     resolution: {integrity: sha1-TkMekrEalzFjaqH5yNHMvP2reN8=}
     engines: {node: '>=0.10.0'}
-    dev: true
 
   /istanbul-lib-coverage/3.0.1:
     resolution: {integrity: sha512-GvCYYTxaCPqwMjobtVcVKvSHtAGe48MNhGjpK8LtVF8K0ISX7hCKl85LgtuaSneWVyQmaGcW3iXVV3GaZSLpmQ==}
@@ -6854,7 +6851,6 @@ packages:
   /kind-of/6.0.3:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
-    dev: true
 
   /klaw/1.3.1:
     resolution: {integrity: sha1-QIhDO0azsbolnXh4XY6W9zugJDk=}
@@ -8891,7 +8887,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       kind-of: 6.0.3
-    dev: true
 
   /shebang-command/1.2.0:
     resolution: {integrity: sha1-RKrGW2lbAzmJaMOfNj/uXer98eo=}

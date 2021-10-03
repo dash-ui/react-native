@@ -1,9 +1,9 @@
-import { render } from "@testing-library/react-native";
+import { act, render } from "@testing-library/react-native";
 import * as React from "react";
 import * as RN from "react-native";
-import type { TextStyle, ViewStyle, ImageStyle } from "react-native";
+import type { ViewStyle } from "react-native";
 import "@testing-library/jest-native/extend-expect";
-import { createStyles } from "./index";
+import { compileStyles, createStyles } from "./index";
 
 describe("styles()", () => {
   const { styles } = createStyles({
@@ -18,12 +18,12 @@ describe("styles()", () => {
 
   it("should convert string styles to objects", () => {
     const style = styles({
-      default: `
+      red: `
         color: red;
       `,
     });
 
-    expect(style()).toEqual({ color: "red" });
+    expect(style("red")).toEqual({ color: "red" });
   });
 
   it("should do nothing with object styles", () => {
@@ -215,6 +215,23 @@ describe("styles()", () => {
       backgroundColor: "red",
     });
   });
+
+  it("should fail to parse declaration", () => {
+    const originalConsoleError = console.error;
+    console.error = jest.fn();
+
+    const style = styles({
+      default: `
+        border-width: 1;
+      `,
+    });
+
+    expect(style()).toEqual({});
+    expect(console.error).toBeCalledWith(
+      "'borderWidth' shorthand property requires units for example - borderWidth: 20px or borderWidth: 10px 20px 40px 50px"
+    );
+    console.error = originalConsoleError;
+  });
 });
 
 describe("styles() themes", () => {
@@ -233,6 +250,7 @@ describe("styles() themes", () => {
           primary: "black",
           secondary: "white",
         },
+        other: {},
       },
     },
   };
@@ -257,7 +275,7 @@ describe("styles() themes", () => {
   });
 
   it("should be the light theme w/ no-preference", () => {
-    colorScheme = "no-preference";
+    colorScheme = null;
     const { styles } = createStyles(stylesConfig);
     const style = styles({
       default: (t) => ({ color: t.colors.primary }),
@@ -267,7 +285,7 @@ describe("styles() themes", () => {
   });
 
   it("should be the dark theme w/ no-preference", () => {
-    colorScheme = "no-preference";
+    colorScheme = null;
     const { styles } = createStyles({
       ...stylesConfig,
       themes: {
@@ -388,14 +406,14 @@ describe("styles.one() themes", () => {
   });
 
   it("should be the light theme w/ no-preference", () => {
-    colorScheme = "no-preference";
+    colorScheme = null;
     const { styles } = createStyles(stylesConfig);
     const style = styles.one((t) => ({ color: t.colors.primary }));
     expect(style()).toEqual({ color: "white" });
   });
 
   it("should be the dark theme w/ no-preference", () => {
-    colorScheme = "no-preference";
+    colorScheme = null;
     const { styles } = createStyles({
       ...stylesConfig,
       themes: {
@@ -502,14 +520,14 @@ describe("styles.cls() themes", () => {
   });
 
   it("should be the light theme w/ no-preference", () => {
-    colorScheme = "no-preference";
+    colorScheme = null;
     const { styles } = createStyles(stylesConfig);
     const style = styles.cls((t) => ({ color: t.colors.primary }));
     expect(style).toEqual({ color: "white" });
   });
 
   it("should be the dark theme w/ no-preference", () => {
-    colorScheme = "no-preference";
+    colorScheme = null;
     const { styles } = createStyles({
       ...stylesConfig,
       themes: {
@@ -531,6 +549,16 @@ describe("styles.lazy()", () => {
       },
       spacing: [1, 2, 4, 8, 16, 32, 64, 128, 256, 512],
     } as const,
+  });
+
+  it("should return empoty object with undefined argument", () => {
+    const style = styles.lazy(
+      (color: "red" | "blue") => `
+      color: ${color};
+    `
+    );
+
+    expect(style()).toEqual({});
   });
 
   it("should convert string styles to objects", () => {
@@ -625,7 +653,7 @@ describe("styles.lazy() themes", () => {
   });
 
   it("should be the light theme w/ no-preference", () => {
-    colorScheme = "no-preference";
+    colorScheme = null;
     const { styles } = createStyles(stylesConfig);
     const style = styles.lazy(
       (color: keyof typeof styles.tokens.light.colors) => (t) => ({
@@ -636,7 +664,7 @@ describe("styles.lazy() themes", () => {
   });
 
   it("should be the dark theme w/ no-preference", () => {
-    colorScheme = "no-preference";
+    colorScheme = null;
     const { styles } = createStyles({
       ...stylesConfig,
       themes: {
@@ -804,27 +832,255 @@ describe("styled.View()", () => {
 });
 
 describe("<DashProvider>", () => {
-  it("should pass", () => {
-    expect(true).toBeTruthy();
+  const stylesConfig = {
+    tokens: {
+      spacing: [1, 2, 4, 8, 16, 32, 64, 128, 256, 512],
+      colors: {
+        primary: "white",
+        secondary: "black",
+      },
+    },
+    themes: {
+      light: {},
+      dark: {
+        colors: {
+          primary: "black",
+          secondary: "white",
+        },
+      },
+    },
+  };
+
+  it("should provide light theme", () => {
+    const { DashProvider, useDash } = createStyles(stylesConfig);
+    let theme;
+
+    function Component() {
+      theme = useDash().theme;
+      return null;
+    }
+
+    render(<Component />, {
+      wrapper: (props) => <DashProvider {...props} />,
+    });
+
+    expect(theme).toBe("light");
+  });
+
+  it("should provide dark theme", () => {
+    const { DashProvider, useDash } = createStyles(stylesConfig);
+    let theme;
+    colorScheme = "dark";
+
+    function Component() {
+      theme = useDash().theme;
+      return null;
+    }
+
+    render(<Component />, {
+      wrapper: (props) => <DashProvider {...props} />,
+    });
+
+    expect(theme).toBe("dark");
+  });
+
+  it("should set new theme", () => {
+    const { DashProvider, useDash } = createStyles(stylesConfig);
+    let theme;
+
+    function Component() {
+      const dash = useDash();
+      theme = dash.theme;
+      React.useEffect(() => {
+        dash.setTheme("dark");
+      }, []);
+      return null;
+    }
+
+    render(<Component />, {
+      wrapper: (props) => <DashProvider {...props} />,
+    });
+
+    expect(theme).toBe("dark");
+  });
+
+  it("should set a default theme", () => {
+    const { DashProvider, useDash } = createStyles(stylesConfig);
+    let theme;
+
+    function Component() {
+      const dash = useDash();
+      theme = dash.theme;
+      return null;
+    }
+
+    render(<Component />, {
+      wrapper: (props) => <DashProvider {...props} defaultTheme="dark" />,
+    });
+
+    expect(theme).toBe("dark");
+  });
+
+  it("should use the first theme in the theme keys", () => {
+    const { DashProvider, useDash } = createStyles({
+      ...stylesConfig,
+      themes: {
+        lightDark: {
+          colors: {
+            primary: "#333",
+          },
+        },
+        ...stylesConfig.themes,
+      },
+    });
+    let theme;
+
+    function Component() {
+      const dash = useDash();
+      theme = dash.theme;
+      return null;
+    }
+
+    render(<Component />, {
+      wrapper: (props) => <DashProvider {...props} />,
+    });
+
+    expect(theme).toBe("lightDark");
+  });
+
+  it("should be controlled by theme prop", () => {
+    const { DashProvider, useDash } = createStyles(stylesConfig);
+    let theme;
+    const onThemeChange = jest.fn();
+
+    function Component() {
+      const dash = useDash();
+      theme = dash.theme;
+      return null;
+    }
+
+    const view = render(
+      <DashProvider theme="light" onThemeChange={onThemeChange}>
+        <Component />
+      </DashProvider>
+    );
+    expect(theme).toBe("light");
+
+    view.rerender(
+      <DashProvider theme="dark" onThemeChange={onThemeChange}>
+        <Component />
+      </DashProvider>
+    );
+    expect(theme).toBe("dark");
+    expect(onThemeChange).not.toBeCalled();
+  });
+
+  it("should call onThemeChange when setTheme is invoked", () => {
+    const { DashProvider, useDash } = createStyles(stylesConfig);
+    let theme;
+    const onThemeChange = jest.fn();
+
+    function Component() {
+      const dash = useDash();
+      theme = dash.theme;
+      React.useLayoutEffect(() => {
+        dash.setTheme("dark");
+      }, []);
+      return null;
+    }
+
+    render(
+      <DashProvider theme="light" onThemeChange={onThemeChange}>
+        <Component />
+      </DashProvider>
+    );
+    expect(theme).toBe("light");
+    expect(onThemeChange).toBeCalledWith("dark");
+  });
+
+  it("should react to useColorScheme changes", () => {
+    const { DashProvider } = createStyles(stylesConfig);
+    const onThemeChange = jest.fn();
+    jest.spyOn(RN.Appearance, "addChangeListener");
+    const listeners: any[] = [];
+    // @ts-expect-error
+    RN.Appearance.addChangeListener.mockImplementation((listener) => {
+      listeners.push(listener);
+      return {
+        remove() {
+          listeners.splice(listeners.indexOf(listener), 1);
+        },
+      };
+    });
+
+    render(<DashProvider onThemeChange={onThemeChange} />);
+    expect(onThemeChange).not.toBeCalled();
+
+    colorScheme = "dark";
+    act(() => {
+      listeners.forEach((listener) => listener(colorScheme));
+    });
+
+    expect(onThemeChange).toBeCalledWith("dark");
+  });
+
+  it("should not react to useColorScheme changes if theme is controlled", () => {
+    const { DashProvider } = createStyles(stylesConfig);
+    const onThemeChange = jest.fn();
+    jest.spyOn(RN.Appearance, "addChangeListener");
+    const listeners: any[] = [];
+    // @ts-expect-error
+    RN.Appearance.addChangeListener.mockImplementation((listener) => {
+      listeners.push(listener);
+    });
+
+    render(<DashProvider theme="light" onThemeChange={onThemeChange} />);
+
+    colorScheme = "dark";
+    act(() => {
+      listeners.forEach((listener) => listener(colorScheme));
+    });
+
+    expect(onThemeChange).not.toBeCalled();
+  });
+
+  it("should not react to useColorScheme changes if themes are non-standard", () => {
+    const { DashProvider } = createStyles({
+      ...stylesConfig,
+      themes: { lightDark: {}, ...stylesConfig.themes },
+    });
+    const onThemeChange = jest.fn();
+    jest.spyOn(RN.Appearance, "addChangeListener");
+    const listeners: any[] = [];
+    // @ts-expect-error
+    RN.Appearance.addChangeListener.mockImplementation((listener) => {
+      listeners.push(listener);
+    });
+
+    render(<DashProvider onThemeChange={onThemeChange} />);
+
+    colorScheme = "dark";
+    act(() => {
+      listeners.forEach((listener) => listener(colorScheme));
+    });
+
+    expect(onThemeChange).not.toBeCalled();
   });
 });
 
-describe("useDash()", () => {
-  it("should pass", () => {
-    expect(true).toBeTruthy();
+describe("compileStyles()", () => {
+  it("should return empty object for null values", () => {
+    expect(compileStyles(null, {})).toEqual({});
   });
 });
 
-let colorScheme: "light" | "dark" | "no-preference" | null | undefined =
-  "light";
+let colorScheme: "light" | "dark" | null | undefined = "light";
 
 beforeEach(() => {
   jest.spyOn(RN.Appearance, "getColorScheme");
   jest.spyOn(RN, "useColorScheme");
   // @ts-expect-error
   RN.Appearance.getColorScheme.mockImplementation(() => colorScheme);
-  // @ts-expect-error
-  RN.useColorScheme.mockImplementation(() => colorScheme);
 });
 
 afterEach(() => {
