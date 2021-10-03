@@ -36,7 +36,7 @@ import { createStyles } from "@dash-ui/react-native";
 
 ## API
 
-### createStyles()
+### createStyles(options)
 
 #### Arguments
 
