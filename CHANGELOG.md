@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/dash-ui/react-native/compare/v1.0.0...v1.0.1) (2021-10-03)
+
+
+### Bug Fixes
+
+* fix something fake to force release ([6e36806](https://github.com/dash-ui/react-native/commit/6e368068106ab8e328277ea2867382484749d780))
+
 # 1.0.0 (2021-10-02)
 
 ### Features

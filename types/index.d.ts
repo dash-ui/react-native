@@ -1603,8 +1603,10 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
         theme: keyof T | "default";
         setTheme(theme: keyof T_2): void;
     };
-    readonly DashProvider: ({ defaultTheme, children, }: {
+    readonly DashProvider: ({ theme: controlledTheme, defaultTheme, onThemeChange, children, }: {
         defaultTheme?: keyof T | undefined;
+        theme?: keyof T | undefined;
+        onThemeChange?: ((theme: keyof T_2) => void) | undefined;
         children?: React.ReactNode;
     }) => JSX.Element;
 };
