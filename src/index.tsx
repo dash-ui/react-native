@@ -42,6 +42,9 @@ export function createStyles<
     }
   }
 
+  const isAutoThemeable =
+    Object.values(tokens).length === 3 && "light" in tokens && "dark" in tokens;
+
   function cls<S extends RNStyles>(
     literals:
       | TemplateStringsArray
@@ -138,7 +141,7 @@ export function createStyles<
         lazyFn: (value: Value) => StyleValue<S, V>
       ) {
         return function (value?: Value) {
-          if (!value) return emptyObj;
+          if (value === undefined) return emptyObj;
           let styles = compileStyles(lazyFn(value), tokens[currentTheme]);
 
           if (process.env.NODE_ENV !== "production") {
@@ -159,6 +162,7 @@ export function createStyles<
     styles,
     theme: currentTheme,
     setTheme(theme: keyof T) {
+      /* istanbul ignore next */
       console.error("DashContext was consumed outside of a Provider");
     },
   });
@@ -190,7 +194,7 @@ export function createStyles<
       ref
     ) {
       const { theme } = useDash();
-      const baseStyle = compileStyles(styles, tokens[theme]);
+      const baseStyle = styles ? compileStyles(styles, tokens[theme]) : void 0;
       const outerStyle =
         typeof style === "function" || typeof style === "string"
           ? compileStyles(style, tokens[theme])
@@ -273,47 +277,79 @@ export function createStyles<
     styled,
     useDash,
     DashProvider({
+      theme: controlledTheme,
       defaultTheme,
+      onThemeChange,
       children,
     }: {
       defaultTheme?: keyof T;
+      theme?: keyof T;
+      onThemeChange?: (theme: keyof T) => void;
       children?: React.ReactNode;
     }) {
       const colorScheme = RN.useColorScheme();
-      const [theme, setTheme] = React.useState<keyof T | "default">(() => {
+      const didMount = React.useRef(false);
+      const [userTheme, setTheme] = React.useState<keyof T | "default">(() => {
+        if (controlledTheme) {
+          currentTheme = controlledTheme;
+          return controlledTheme;
+        }
+
         if (defaultTheme) {
           currentTheme = defaultTheme;
           return defaultTheme;
         }
 
-        if (colorScheme && colorScheme in themes) {
+        if (colorScheme && colorScheme in tokens && isAutoThemeable) {
           currentTheme = colorScheme as keyof T;
           return colorScheme as keyof T;
         }
 
         return currentTheme;
       });
+      const theme = controlledTheme ?? userTheme;
+      currentTheme = theme;
+      const storedOnChange = React.useRef(onThemeChange);
 
       React.useLayoutEffect(() => {
-        if (theme) currentTheme = theme;
-      }, [theme]);
+        storedOnChange.current = onThemeChange;
+      });
+
+      React.useLayoutEffect(() => {
+        if (controlledTheme && controlledTheme !== userTheme) {
+          setTheme(controlledTheme);
+        }
+      }, [controlledTheme, userTheme]);
 
       React.useLayoutEffect(() => {
         if (
+          didMount.current &&
+          !controlledTheme &&
           colorScheme &&
           colorScheme !== theme &&
-          // light + dark + default
-          Object.values(themes).length === 3 &&
-          "light" in themes &&
-          "dark" in themes
+          isAutoThemeable
         ) {
           currentTheme = colorScheme as keyof T;
+          setTheme(currentTheme);
+          storedOnChange.current?.(currentTheme);
         }
-      }, [colorScheme, theme]);
+
+        didMount.current = true;
+      }, [colorScheme, controlledTheme]);
 
       return (
         <DashContext.Provider
-          value={React.useMemo(() => ({ styles, theme, setTheme }), [theme])}
+          value={React.useMemo(
+            () => ({
+              styles,
+              theme,
+              setTheme(nextTheme) {
+                if (nextTheme !== theme) storedOnChange.current?.(nextTheme);
+                setTheme(nextTheme);
+              },
+            }),
+            [theme]
+          )}
           children={children}
         />
       );

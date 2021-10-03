@@ -1,17 +1,14 @@
 <hr/>
+  
+<img src='https://github.com/dash-ui/styles/raw/main/assets/logo.png'/>
 
-# @dash-ui/react-native
-
-> Use your @dash-ui styles in react-native
+> Use your [@dash-ui](https://github.com/dash-ui) styles in react-native
 
 ```sh
 npm i @dash-ui/react-native
 ```
 
 <p>
-  <a href="https://bundlephobia.com/result?p=@dash-ui/react-native">
-    <img alt="Bundlephobia" src="https://img.shields.io/bundlephobia/minzip/@dash-ui/react-native?style=for-the-badge&labelColor=24292e">
-  </a>
   <a aria-label="Types" href="https://www.npmjs.com/package/@dash-ui/react-native">
     <img alt="Types" src="https://img.shields.io/npm/types/@dash-ui/react-native?style=for-the-badge&labelColor=24292e">
   </a>
@@ -34,18 +31,86 @@ npm i @dash-ui/react-native
 ## Quick start
 
 ```js
-import _ from '@dash-ui/react-native'
+import { createStyles } from "@dash-ui/react-native";
 ```
 
 ## API
 
-### someFunction()
+### createStyles()
 
 #### Arguments
 
 | Name | Type | Default | Required? | Description |
 | ---- | ---- | ------- | --------- | ----------- |
 |      |      |         |           |             |
+
+### styles()
+
+#### Arguments
+
+| Name | Type | Default | Required? | Description |
+| ---- | ---- | ------- | --------- | ----------- |
+|      |      |         |           |             |
+
+### styles.one()
+
+#### Arguments
+
+| Name | Type | Default | Required? | Description |
+| ---- | ---- | ------- | --------- | ----------- |
+|      |      |         |           |             |
+
+### styles.cls()
+
+#### Arguments
+
+| Name | Type | Default | Required? | Description |
+| ---- | ---- | ------- | --------- | ----------- |
+|      |      |         |           |             |
+
+### styles.lazy()
+
+#### Arguments
+
+| Name | Type | Default | Required? | Description |
+| ---- | ---- | ------- | --------- | ----------- |
+|      |      |         |           |             |
+
+### styles.join()
+
+#### Arguments
+
+| Name | Type | Default | Required? | Description |
+| ---- | ---- | ------- | --------- | ----------- |
+|      |      |         |           |             |
+
+### styled()
+
+#### Arguments
+
+| Name | Type | Default | Required? | Description |
+| ---- | ---- | ------- | --------- | ----------- |
+|      |      |         |           |             |
+
+### useDash()
+
+#### Arguments
+
+| Name | Type | Default | Required? | Description |
+| ---- | ---- | ------- | --------- | ----------- |
+|      |      |         |           |             |
+
+### &lt;DashProvider&gt;
+
+#### Arguments
+
+| Name | Type | Default | Required? | Description |
+| ---- | ---- | ------- | --------- | ----------- |
+|      |      |         |           |             |
+
+## Themes
+
+### Auto-theming w/ `Appearance.getColorScheme()`
 
 ## LICENSE
 
