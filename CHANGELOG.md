@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/dash-ui/react-native/compare/v1.0.2...v1.0.3) (2021-10-04)
+
+
+### Bug Fixes
+
+* improve accuracy in theme inheritance as represented in types ([e244030](https://github.com/dash-ui/react-native/commit/e244030b47ae35ec465fdd7af618d389a89b8456))
+
 ## [1.0.2](https://github.com/dash-ui/react-native/compare/v1.0.1...v1.0.2) (2021-10-04)
 
 
