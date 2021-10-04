@@ -31,7 +31,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
         }>(Component: React.ComponentType<Props>, styles?: StyleValue<Extract<Props["style"], Style>, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined): React.ForwardRefExoticComponent<React.PropsWithoutRef<{ [K in keyof ({
             children?: React.ReactNode;
         } & Props)]: K extends "style" ? {
-            style?: Falsy | StyleValue<Extract<Props["style"], Style>, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<Extract<Props["style"], Style>, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<Extract<Props["style"], Style>, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<Extract<Props["style"], Style>, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
         }[K] : ({
             children?: React.ReactNode;
         } & Props)[K]; }> & React.RefAttributes<unknown>>;
@@ -41,7 +41,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             color?: RN.ColorValue | undefined;
             hidesWhenStopped?: boolean | undefined;
             size?: number | "small" | "large" | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             hitSlop?: RN.Insets | undefined;
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
@@ -114,7 +114,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
             removeClippedSubviews?: boolean | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             testID?: string | undefined;
             nativeID?: string | undefined;
             collapsable?: boolean | undefined;
@@ -236,7 +236,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             scrollEnabled?: boolean | undefined;
             showsHorizontalScrollIndicator?: boolean | undefined;
             showsVerticalScrollIndicator?: boolean | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             refreshControl?: React.ReactElement<RN.RefreshControlProps, string | React.JSXElementConstructor<any>> | undefined;
             snapToInterval?: number | undefined;
             snapToOffsets?: number[] | undefined;
@@ -333,7 +333,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
         } & React.RefAttributes<unknown>>;
         Image: (literals: string | RN.ImageStyle | TemplateStringsArray | StyleCallback<RN.ImageStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
-            style?: Falsy | StyleValue<RN.ImageStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ImageStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ImageStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ImageStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             onError?: ((error: RN.NativeSyntheticEvent<RN.ImageErrorEventData>) => void) | undefined;
             onLoad?: ((event: RN.NativeSyntheticEvent<RN.ImageLoadEventData>) => void) | undefined;
@@ -382,7 +382,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
         ImageBackground: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             imageStyle?: RN.StyleProp<RN.ImageStyle>;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             imageRef?: ((image: RN.Image) => void) | undefined;
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             onError?: ((error: RN.NativeSyntheticEvent<RN.ImageErrorEventData>) => void) | undefined;
@@ -439,7 +439,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
             removeClippedSubviews?: boolean | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             testID?: string | undefined;
             nativeID?: string | undefined;
             collapsable?: boolean | undefined;
@@ -509,7 +509,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
             removeClippedSubviews?: boolean | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             testID?: string | undefined;
             nativeID?: string | undefined;
             collapsable?: boolean | undefined;
@@ -572,7 +572,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             tintColor?: RN.ColorValue | undefined;
             titleTextColor?: RN.ColorValue | undefined;
             translucent?: boolean | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
         } & React.RefAttributes<unknown>>;
         RecyclerViewBackedScrollView: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
@@ -593,7 +593,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             removeClippedSubviews?: boolean | undefined;
             showsHorizontalScrollIndicator?: boolean | undefined;
             showsVerticalScrollIndicator?: boolean | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             refreshControl?: React.ReactElement<RN.RefreshControlProps, string | React.JSXElementConstructor<any>> | undefined;
             snapToInterval?: number | undefined;
             snapToOffsets?: number[] | undefined;
@@ -701,7 +701,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
             removeClippedSubviews?: boolean | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             testID?: string | undefined;
             nativeID?: string | undefined;
             collapsable?: boolean | undefined;
@@ -764,7 +764,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
             removeClippedSubviews?: boolean | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             testID?: string | undefined;
             nativeID?: string | undefined;
             collapsable?: boolean | undefined;
@@ -835,7 +835,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             removeClippedSubviews?: boolean | undefined;
             showsHorizontalScrollIndicator?: boolean | undefined;
             showsVerticalScrollIndicator?: boolean | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             refreshControl?: React.ReactElement<RN.RefreshControlProps, string | React.JSXElementConstructor<any>> | undefined;
             snapToInterval?: number | undefined;
             snapToOffsets?: number[] | undefined;
@@ -1006,7 +1006,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             scrollEnabled?: boolean | undefined;
             showsHorizontalScrollIndicator?: boolean | undefined;
             showsVerticalScrollIndicator?: boolean | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             refreshControl?: React.ReactElement<RN.RefreshControlProps, string | React.JSXElementConstructor<any>> | undefined;
             snapToInterval?: number | undefined;
             snapToOffsets?: number[] | undefined;
@@ -1110,7 +1110,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
             removeClippedSubviews?: boolean | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             testID?: string | undefined;
             nativeID?: string | undefined;
             collapsable?: boolean | undefined;
@@ -1175,7 +1175,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             testID?: string | undefined;
             value?: boolean | undefined;
             ios_backgroundColor?: RN.ColorValue | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             onTintColor?: RN.ColorValue | undefined;
             thumbTintColor?: RN.ColorValue | undefined;
             tintColor?: RN.ColorValue | undefined;
@@ -1245,7 +1245,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             onPressIn?: ((event: RN.GestureResponderEvent) => void) | undefined;
             onPressOut?: ((event: RN.GestureResponderEvent) => void) | undefined;
             onLongPress?: ((event: RN.GestureResponderEvent) => void) | undefined;
-            style?: Falsy | StyleValue<RN.TextStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.TextStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.TextStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.TextStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             testID?: string | undefined;
             nativeID?: string | undefined;
             maxFontSizeMultiplier?: number | null | undefined;
@@ -1314,7 +1314,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
                 end?: number | undefined;
             } | undefined;
             selectionColor?: RN.ColorValue | undefined;
-            style?: Falsy | StyleValue<RN.TextStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.TextStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.TextStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.TextStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             textAlign?: "left" | "right" | "center" | undefined;
             testID?: string | undefined;
             inputAccessoryViewID?: string | undefined;
@@ -1401,7 +1401,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             activeOpacity?: number | undefined;
             onHideUnderlay?: (() => void) | undefined;
             onShowUnderlay?: (() => void) | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             underlayColor?: RN.ColorValue | undefined;
             delayLongPress?: number | undefined;
             delayPressIn?: number | undefined;
@@ -1456,7 +1456,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             onPress?: ((event: RN.GestureResponderEvent) => void) | undefined;
             onPressIn?: ((event: RN.GestureResponderEvent) => void) | undefined;
             onPressOut?: ((event: RN.GestureResponderEvent) => void) | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             pressRetentionOffset?: RN.Insets | undefined;
             testID?: string | undefined;
             hasTVPreferredFocus?: boolean | undefined;
@@ -1497,7 +1497,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             onPress?: ((event: RN.GestureResponderEvent) => void) | undefined;
             onPressIn?: ((event: RN.GestureResponderEvent) => void) | undefined;
             onPressOut?: ((event: RN.GestureResponderEvent) => void) | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             pressRetentionOffset?: RN.Insets | undefined;
             testID?: string | undefined;
             hasTVPreferredFocus?: boolean | undefined;
@@ -1537,7 +1537,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             onPress?: ((event: RN.GestureResponderEvent) => void) | undefined;
             onPressIn?: ((event: RN.GestureResponderEvent) => void) | undefined;
             onPressOut?: ((event: RN.GestureResponderEvent) => void) | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             pressRetentionOffset?: RN.Insets | undefined;
             testID?: string | undefined;
             hasTVPreferredFocus?: boolean | undefined;
@@ -1569,7 +1569,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
             removeClippedSubviews?: boolean | undefined;
-            style?: Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<Falsy | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>>;
+            style?: number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | RN.RecursiveArray<number | boolean | StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | null | undefined> | null | undefined;
             testID?: string | undefined;
             nativeID?: string | undefined;
             collapsable?: boolean | undefined;

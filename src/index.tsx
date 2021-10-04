@@ -228,13 +228,19 @@ export function createStyles<
                     Extract<Props["style"], Style>,
                     ValueOf<Omit<VT, "default">>
                   >
-                | Falsy
+                | undefined
+                | boolean
+                | null
+                | number
               >
             | StyleValue<
                 Extract<Props["style"], Style>,
                 ValueOf<Omit<VT, "default">>
               >
-            | Falsy;
+            | undefined
+            | boolean
+            | null
+            | number;
         }
       >,
       ref
