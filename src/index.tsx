@@ -431,14 +431,7 @@ export function compileStyles<V extends Record<string, unknown> = DashTokens>(
     return value || {};
   }
 
-  let cache = compileCache.get(tokens);
-
-  if (!cache) {
-    cache = new Map<string, StyleObject>();
-    compileCache.set(tokens, cache);
-  }
-
-  const cachedStyle = cache.get(value);
+  const cachedStyle = compileCache.get(value);
   if (cachedStyle) return cachedStyle;
 
   const stylePairs: [string, string][] = [];
@@ -451,7 +444,7 @@ export function compileStyles<V extends Record<string, unknown> = DashTokens>(
 
   try {
     const style = cssToRN(stylePairs);
-    cache.set(value, style);
+    compileCache.set(value, style);
     return style;
   } catch (error: any) {
     const msg = error.message;
@@ -469,12 +462,12 @@ export function compileStyles<V extends Record<string, unknown> = DashTokens>(
     }
 
     const style = {};
-    cache.set(value, style);
+    compileCache.set(value, style);
     return style;
   }
 }
 
-const compileCache = new WeakMap<DashTokens, Map<string, StyleObject>>();
+const compileCache = new Map<string, StyleObject>();
 
 function mergeTokens<
   T extends Record<string, unknown>,
