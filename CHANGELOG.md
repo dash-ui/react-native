@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/dash-ui/react-native/compare/v1.0.3...v1.1.0) (2021-10-04)
+
+
+### Features
+
+* allow style prop to be recursive array in styled components ([e81a4f2](https://github.com/dash-ui/react-native/commit/e81a4f2689aad8891bb65582d9151c5006663916))
+
 ## [1.0.3](https://github.com/dash-ui/react-native/compare/v1.0.2...v1.0.3) (2021-10-04)
 
 
