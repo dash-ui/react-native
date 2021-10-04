@@ -79,18 +79,19 @@ export function createStyles<
       // style('text', {})
       function style(...args: StyleArguments<Extract<keyof T, string>>) {
         const numArgs = args.length;
-        const sheet = styleMap.default
+        let sheet = styleMap.default
           ? compileStyles(styleMap.default, tokens[currentTheme] as V)
           : {};
 
         if (numArgs === 1 && typeof args[0] === "string") {
-          Object.assign(
-            sheet,
-            compileStyles(styleMap[args[0]], tokens[currentTheme] as V)
-          );
+          sheet = {
+            ...sheet,
+            ...compileStyles(styleMap[args[0]], tokens[currentTheme] as V),
+          };
         } else if (numArgs > 0) {
           let i = 0;
           let arg;
+          sheet = { ...sheet };
 
           for (; i < numArgs; i++) {
             arg = args[i];
