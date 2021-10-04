@@ -4,19 +4,28 @@ import cssToRN from "css-to-react-native";
 import * as React from "react";
 import * as RN from "react-native";
 import type { O } from "ts-toolbelt";
-import type { JsonObject, JsonValue } from "type-fest";
+import type { JsonValue, ValueOf } from "type-fest";
 
 const emptyObj = {};
 
 export function createStyles<
-  V extends DashTokens = DashTokens,
-  T extends DashThemes = DashThemes
+  V extends Record<string, unknown> = DashTokens,
+  T extends Record<string, Record<string, unknown>> = DashThemes,
+  VT extends {
+    [K in keyof T]: O.Merge<V, T[K], "deep">;
+  } & {
+    default: V;
+  } = {
+    [K in keyof T]: O.Merge<V, T[K], "deep">;
+  } & {
+    default: V;
+  }
 >(options: CreateStylesOptions<V, T> = emptyObj) {
   const themes = options.themes ?? (emptyObj as T);
   let currentTheme: keyof T | "default" = "default";
   const tokens = {
     default: options.tokens ?? emptyObj,
-  } as Record<keyof T | "default", V>;
+  } as VT;
 
   if (options.themes) {
     const themeNames = Object.keys(options.themes) as (keyof T)[];
@@ -26,7 +35,7 @@ export function createStyles<
       tokens[themeName] = mergeTokens(
         cloneDeep(tokens.default),
         themes[themeName]
-      ) as V;
+      ) as VT[typeof themeName];
     }
 
     const colorScheme = RN.Appearance.getColorScheme();
@@ -50,7 +59,7 @@ export function createStyles<
       | TemplateStringsArray
       | string
       | StyleObject<S>
-      | StyleCallback<S, V>,
+      | StyleCallback<S, ValueOf<Omit<VT, "default">>>,
     ...placeholders: string[]
   ) {
     const styles = compileStyles(
@@ -71,13 +80,13 @@ export function createStyles<
       function style(...args: StyleArguments<Extract<keyof T, string>>) {
         const numArgs = args.length;
         const sheet = styleMap.default
-          ? compileStyles(styleMap.default, tokens[currentTheme])
+          ? compileStyles(styleMap.default, tokens[currentTheme] as V)
           : {};
 
         if (numArgs === 1 && typeof args[0] === "string") {
           Object.assign(
             sheet,
-            compileStyles(styleMap[args[0]], tokens[currentTheme])
+            compileStyles(styleMap[args[0]], tokens[currentTheme] as V)
           );
         } else if (numArgs > 0) {
           let i = 0;
@@ -89,14 +98,14 @@ export function createStyles<
             if (typeof arg === "string") {
               Object.assign(
                 sheet,
-                compileStyles(styleMap[arg], tokens[currentTheme])
+                compileStyles(styleMap[arg], tokens[currentTheme] as V)
               );
             } else if (typeof arg === "object") {
               for (const key in arg)
                 if (arg[key])
                   Object.assign(
                     sheet,
-                    compileStyles(styleMap[key], tokens[currentTheme])
+                    compileStyles(styleMap[key], tokens[currentTheme] as V)
                   );
             }
           }
@@ -116,7 +125,7 @@ export function createStyles<
           | TemplateStringsArray
           | string
           | StyleObject<S>
-          | StyleCallback<S, V>,
+          | StyleCallback<S, ValueOf<Omit<VT, "default">>>,
         ...placeholders: string[]
       ) {
         let styles = compileStyles(
@@ -138,11 +147,14 @@ export function createStyles<
       },
       cls,
       lazy<Value extends JsonValue, S extends RNStyles = RNStyles>(
-        lazyFn: (value: Value) => StyleValue<S, V>
+        lazyFn: (value: Value) => StyleValue<S, ValueOf<Omit<VT, "default">>>
       ) {
         return function (value?: Value) {
           if (value === undefined) return emptyObj;
-          let styles = compileStyles(lazyFn(value), tokens[currentTheme]);
+          let styles = compileStyles(
+            lazyFn(value),
+            tokens[currentTheme] as any
+          );
 
           if (process.env.NODE_ENV !== "production") {
             styles = Object.freeze(styles);
@@ -155,6 +167,7 @@ export function createStyles<
         return cls("".concat(...css));
       },
       tokens,
+      themes,
     } as const
   );
 
@@ -174,14 +187,17 @@ export function createStyles<
     return React.useContext(DashContext);
   }
 
-  const styled = function styled<
+  function styled<
     Style extends RN.ViewStyle | RN.TextStyle | RN.ImageStyle,
     Props extends {
       style?: RN.StyleProp<Style>;
     }
   >(
     Component: React.ComponentType<Props>,
-    styles?: StyleValue<Extract<Props["style"], Style>, V>
+    styles?: StyleValue<
+      Extract<Props["style"], Style>,
+      ValueOf<Omit<VT, "default">>
+    >
   ) {
     const RefForwardingComponent = React.forwardRef(function StyledComponent(
       {
@@ -189,15 +205,22 @@ export function createStyles<
         ...props
       }: O.Overwrite<
         { children?: React.ReactNode } & Props,
-        { style?: StyleValue<Extract<Props["style"], Style>, V> }
+        {
+          style?: StyleValue<
+            Extract<Props["style"], Style>,
+            ValueOf<Omit<VT, "default">>
+          >;
+        }
       >,
       ref
     ) {
       const { theme } = useDash();
-      const baseStyle = styles ? compileStyles(styles, tokens[theme]) : void 0;
+      const baseStyle = styles
+        ? compileStyles(styles, tokens[theme] as any)
+        : void 0;
       const outerStyle =
         typeof style === "function" || typeof style === "string"
-          ? compileStyles(style, tokens[theme])
+          ? compileStyles(style, tokens[theme] as any)
           : style;
 
       return (
@@ -222,7 +245,7 @@ export function createStyles<
     // }
 
     return RefForwardingComponent;
-  };
+  }
 
   function wrapStyled<
     Style extends RN.ViewStyle | RN.TextStyle | RN.ImageStyle,
@@ -235,7 +258,10 @@ export function createStyles<
         | TemplateStringsArray
         | string
         | StyleObject<Extract<Props["style"], Style>>
-        | StyleCallback<Extract<Props["style"], Style>, V>,
+        | StyleCallback<
+            Extract<Props["style"], Style>,
+            ValueOf<Omit<VT, "default">>
+          >,
       ...placeholders: string[]
     ) {
       return styled(
@@ -289,7 +315,7 @@ export function createStyles<
     }) {
       const colorScheme = RN.useColorScheme();
       const didMount = React.useRef(false);
-      const [userTheme, setTheme] = React.useState<keyof T | "default">(() => {
+      const [userTheme, setTheme] = React.useState<keyof T>(() => {
         if (controlledTheme) {
           currentTheme = controlledTheme;
           return controlledTheme;
@@ -363,7 +389,7 @@ export function createStyles<
  * @param styles - A style callback, object, or string
  * @param tokens - A map of CSS tokens for style callbacks
  */
-export function compileStyles<V extends DashTokens = DashTokens>(
+export function compileStyles<V extends Record<string, unknown> = DashTokens>(
   styles: StyleValue<RNStyles, V> | Falsy,
   tokens: V
 ): StyleObject {
@@ -417,15 +443,15 @@ export function compileStyles<V extends DashTokens = DashTokens>(
 
 const compileCache = new WeakMap<DashTokens, Map<string, StyleObject>>();
 
-function mergeTokens<T extends JsonObject, U extends JsonObject>(
-  target: T,
-  source: U
-) {
+function mergeTokens<
+  T extends Record<string, unknown>,
+  U extends Record<string, unknown>
+>(target: T, source: U) {
   for (const key in source) {
     const value = source[key];
     (target as any)[key] =
       typeof value === "object" && value !== null && !Array.isArray(value)
-        ? mergeTokens(target[key] ?? {}, value)
+        ? mergeTokens((target[key] ?? {}) as any, value as any)
         : value;
   }
 
@@ -434,7 +460,10 @@ function mergeTokens<T extends JsonObject, U extends JsonObject>(
 
 const propertyValuePattern = /\s*([^\s]+)\s*:\s*(.+?)\s*$/;
 
-function compileLiterals<S extends RNStyles, V extends DashTokens = DashTokens>(
+function compileLiterals<
+  S extends RNStyles,
+  V extends Record<string, unknown> = DashTokens
+>(
   literals:
     | TemplateStringsArray
     | string
@@ -454,33 +483,36 @@ export type Styles = ReturnType<typeof createStyles>;
 
 export interface CreateStylesOptions<
   V extends DashTokens = DashTokens,
-  T extends DashThemes = DashThemes
+  T extends Record<string, unknown> = DashThemes
 > {
   readonly tokens?: V;
   readonly themes?: {
-    [Name in keyof T]: O.Partial<V, "deep">;
+    [Name in keyof T]: T[Name];
   };
 }
 
-export type StyleMap<S extends RNStyles, V extends DashTokens = DashTokens> = {
+export type StyleMap<
+  S extends RNStyles,
+  V extends Record<string, unknown> = DashTokens
+> = {
   [name: string]: string | StyleCallback<S, V> | StyleObject<S>;
 };
 
 export type StyleValue<
   S extends RNStyles = RNStyles,
-  V extends DashTokens = DashTokens
+  V extends Record<string, unknown> = DashTokens
 > = string | StyleCallback<S, V> | StyleObject<S>;
 
 export type StyleObject<S extends RNStyles = RNStyles> = S;
 
 export type StyleCallback<
   S extends RNStyles = RNStyles,
-  V extends DashTokens = DashTokens
+  V extends Record<string, unknown> = DashTokens
 > = (tokens: V) => StyleObject<S> | string;
 
 export type RNStyles = RN.ViewStyle | RN.TextStyle | RN.ImageStyle;
-export interface DashTokens {}
-export interface DashThemes {}
+export interface DashTokens extends Record<string, unknown> {}
+export interface DashThemes extends Record<string, Record<string, unknown>> {}
 
 /**
  * The names of the themes defined in the `DashThemes` type

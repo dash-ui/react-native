@@ -2,37 +2,46 @@ import type { Falsy, StyleArguments } from "@dash-ui/styles";
 import * as React from "react";
 import * as RN from "react-native";
 import type { O } from "ts-toolbelt";
-import type { JsonValue } from "type-fest";
-export declare function createStyles<V extends DashTokens = DashTokens, T extends DashThemes = DashThemes>(options?: CreateStylesOptions<V, T>): {
+import type { JsonValue, ValueOf } from "type-fest";
+export declare function createStyles<V extends Record<string, unknown> = DashTokens, T extends Record<string, Record<string, unknown>> = DashThemes, VT extends {
+    [K in keyof T]: O.Merge<V, T[K], "deep">;
+} & {
+    default: V;
+} = {
+    [K in keyof T]: O.Merge<V, T[K], "deep">;
+} & {
+    default: V;
+}>(options?: CreateStylesOptions<V, T>): {
     readonly styles: (<T_1 extends StyleMap<RNStyles, V>>(styleMap: T_1) => {
         (...args: StyleArguments<Extract<keyof T_1, string>>): RN.ViewStyle | RN.ImageStyle;
         styles: T_1;
     }) & {
-        readonly one: <S extends RNStyles>(literals: string | TemplateStringsArray | S | StyleCallback<S, V>, ...placeholders: string[]) => ((createStyle?: unknown) => {}) & {
+        readonly one: <S extends RNStyles>(literals: string | TemplateStringsArray | S | StyleCallback<S, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => ((createStyle?: unknown) => {}) & {
             styles: RNStyles;
         };
-        readonly cls: <S_1 extends RNStyles>(literals: string | S_1 | TemplateStringsArray | StyleCallback<S_1, V>, ...placeholders: string[]) => RN.ViewStyle | RN.ImageStyle;
-        readonly lazy: <Value extends JsonValue, S_2 extends RNStyles = RNStyles>(lazyFn: (value: Value) => StyleValue<S_2, V>) => (value?: Value | undefined) => {};
+        readonly cls: <S_1 extends RNStyles>(literals: string | S_1 | TemplateStringsArray | StyleCallback<S_1, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => RN.ViewStyle | RN.ImageStyle;
+        readonly lazy: <Value extends JsonValue, S_2 extends RNStyles = RNStyles>(lazyFn: (value: Value) => StyleValue<S_2, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>) => (value?: Value | undefined) => {};
         readonly join: (...css: string[]) => RN.ViewStyle | RN.ImageStyle;
-        readonly tokens: Record<keyof T | "default", V>;
+        readonly tokens: VT;
+        readonly themes: T;
     };
     readonly styled: {
         <Style extends RN.ViewStyle | RN.TextStyle | RN.ImageStyle, Props extends {
             style?: RN.StyleProp<Style>;
-        }>(Component: React.ComponentType<Props>, styles?: StyleValue<Extract<Props["style"], Style>, V> | undefined): React.ForwardRefExoticComponent<React.PropsWithoutRef<{ [K in keyof ({
+        }>(Component: React.ComponentType<Props>, styles?: StyleValue<Extract<Props["style"], Style>, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined): React.ForwardRefExoticComponent<React.PropsWithoutRef<{ [K in keyof ({
             children?: React.ReactNode;
         } & Props)]: K extends "style" ? {
-            style?: StyleValue<Extract<Props["style"], Style>, V> | undefined;
+            style?: StyleValue<Extract<Props["style"], Style>, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
         }[K] : ({
             children?: React.ReactNode;
         } & Props)[K]; }> & React.RefAttributes<unknown>>;
-        ActivityIndicator: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        ActivityIndicator: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             animating?: boolean | undefined;
             color?: RN.ColorValue | undefined;
             hidesWhenStopped?: boolean | undefined;
             size?: number | "small" | "large" | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             hitSlop?: RN.Insets | undefined;
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
@@ -88,7 +97,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onMagicTap?: (() => void) | undefined;
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        DrawerLayoutAndroid: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        DrawerLayoutAndroid: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             drawerBackgroundColor?: RN.ColorValue | undefined;
             drawerLockMode?: "unlocked" | "locked-closed" | "locked-open" | undefined;
@@ -105,7 +114,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
             removeClippedSubviews?: boolean | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             testID?: string | undefined;
             nativeID?: string | undefined;
             collapsable?: boolean | undefined;
@@ -157,7 +166,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onMagicTap?: (() => void) | undefined;
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        FlatList: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        FlatList: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             ItemSeparatorComponent?: React.ComponentType<any> | null | undefined;
             ListEmptyComponent?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ComponentType<any> | null | undefined;
@@ -227,7 +236,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             scrollEnabled?: boolean | undefined;
             showsHorizontalScrollIndicator?: boolean | undefined;
             showsVerticalScrollIndicator?: boolean | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             refreshControl?: React.ReactElement<RN.RefreshControlProps, string | React.JSXElementConstructor<any>> | undefined;
             snapToInterval?: number | undefined;
             snapToOffsets?: number[] | undefined;
@@ -322,9 +331,9 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             nestedScrollEnabled?: boolean | undefined;
             persistentScrollbar?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        Image: (literals: string | RN.ImageStyle | TemplateStringsArray | StyleCallback<RN.ImageStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        Image: (literals: string | RN.ImageStyle | TemplateStringsArray | StyleCallback<RN.ImageStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
-            style?: StyleValue<RN.ImageStyle, V> | undefined;
+            style?: StyleValue<RN.ImageStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             onError?: ((error: RN.NativeSyntheticEvent<RN.ImageErrorEventData>) => void) | undefined;
             onLoad?: ((event: RN.NativeSyntheticEvent<RN.ImageLoadEventData>) => void) | undefined;
@@ -370,10 +379,10 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onMagicTap?: (() => void) | undefined;
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        ImageBackground: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        ImageBackground: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             imageStyle?: RN.StyleProp<RN.ImageStyle>;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             imageRef?: ((image: RN.Image) => void) | undefined;
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             onError?: ((error: RN.NativeSyntheticEvent<RN.ImageErrorEventData>) => void) | undefined;
@@ -420,7 +429,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onMagicTap?: (() => void) | undefined;
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        KeyboardAvoidingView: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        KeyboardAvoidingView: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             behavior?: "height" | "padding" | "position" | undefined;
             contentContainerStyle?: RN.StyleProp<RN.ViewStyle>;
@@ -430,7 +439,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
             removeClippedSubviews?: boolean | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             testID?: string | undefined;
             nativeID?: string | undefined;
             collapsable?: boolean | undefined;
@@ -482,7 +491,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onMagicTap?: (() => void) | undefined;
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        Modal: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        Modal: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             animated?: boolean | undefined;
             animationType?: "none" | "slide" | "fade" | undefined;
@@ -500,7 +509,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
             removeClippedSubviews?: boolean | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             testID?: string | undefined;
             nativeID?: string | undefined;
             collapsable?: boolean | undefined;
@@ -552,7 +561,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onMagicTap?: (() => void) | undefined;
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        NavigatorIOS: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        NavigatorIOS: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             barTintColor?: RN.ColorValue | undefined;
             initialRoute: RN.Route;
@@ -563,9 +572,9 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             tintColor?: RN.ColorValue | undefined;
             titleTextColor?: RN.ColorValue | undefined;
             translucent?: boolean | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
         } & React.RefAttributes<unknown>>;
-        RecyclerViewBackedScrollView: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        RecyclerViewBackedScrollView: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             contentContainerStyle?: RN.StyleProp<RN.ViewStyle>;
             decelerationRate?: number | "normal" | "fast" | undefined;
@@ -584,7 +593,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             removeClippedSubviews?: boolean | undefined;
             showsHorizontalScrollIndicator?: boolean | undefined;
             showsVerticalScrollIndicator?: boolean | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             refreshControl?: React.ReactElement<RN.RefreshControlProps, string | React.JSXElementConstructor<any>> | undefined;
             snapToInterval?: number | undefined;
             snapToOffsets?: number[] | undefined;
@@ -681,7 +690,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             fadingEdgeLength?: number | undefined;
             persistentScrollbar?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        RefreshControl: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        RefreshControl: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             onRefresh?: (() => void) | undefined;
             refreshing: boolean;
@@ -692,7 +701,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
             removeClippedSubviews?: boolean | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             testID?: string | undefined;
             nativeID?: string | undefined;
             collapsable?: boolean | undefined;
@@ -749,13 +758,13 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             size?: number | undefined;
             progressViewOffset?: number | undefined;
         } & React.RefAttributes<unknown>>;
-        SafeAreaView: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        SafeAreaView: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             hitSlop?: RN.Insets | undefined;
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
             removeClippedSubviews?: boolean | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             testID?: string | undefined;
             nativeID?: string | undefined;
             collapsable?: boolean | undefined;
@@ -807,7 +816,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onMagicTap?: (() => void) | undefined;
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        ScrollView: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        ScrollView: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             contentContainerStyle?: RN.StyleProp<RN.ViewStyle>;
             decelerationRate?: number | "normal" | "fast" | undefined;
@@ -826,7 +835,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             removeClippedSubviews?: boolean | undefined;
             showsHorizontalScrollIndicator?: boolean | undefined;
             showsVerticalScrollIndicator?: boolean | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             refreshControl?: React.ReactElement<RN.RefreshControlProps, string | React.JSXElementConstructor<any>> | undefined;
             snapToInterval?: number | undefined;
             snapToOffsets?: number[] | undefined;
@@ -923,7 +932,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             fadingEdgeLength?: number | undefined;
             persistentScrollbar?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        SectionList: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        SectionList: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             ItemSeparatorComponent?: React.ComponentType<any> | null | undefined;
             ListEmptyComponent?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ComponentType<any> | null | undefined;
@@ -997,7 +1006,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             scrollEnabled?: boolean | undefined;
             showsHorizontalScrollIndicator?: boolean | undefined;
             showsVerticalScrollIndicator?: boolean | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             refreshControl?: React.ReactElement<RN.RefreshControlProps, string | React.JSXElementConstructor<any>> | undefined;
             snapToInterval?: number | undefined;
             snapToOffsets?: number[] | undefined;
@@ -1093,7 +1102,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             fadingEdgeLength?: number | undefined;
             persistentScrollbar?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        SnapshotViewIOS: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        SnapshotViewIOS: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             onSnapshotReady: () => any;
             testIdentifier: string;
@@ -1101,7 +1110,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
             removeClippedSubviews?: boolean | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             testID?: string | undefined;
             nativeID?: string | undefined;
             collapsable?: boolean | undefined;
@@ -1153,7 +1162,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onMagicTap?: (() => void) | undefined;
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        Switch: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        Switch: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             thumbColor?: RN.ColorValue | undefined;
             trackColor?: {
@@ -1166,7 +1175,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             testID?: string | undefined;
             value?: boolean | undefined;
             ios_backgroundColor?: RN.ColorValue | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             onTintColor?: RN.ColorValue | undefined;
             thumbTintColor?: RN.ColorValue | undefined;
             tintColor?: RN.ColorValue | undefined;
@@ -1224,7 +1233,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onMagicTap?: (() => void) | undefined;
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        Text: (literals: string | RN.TextStyle | TemplateStringsArray | StyleCallback<RN.TextStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        Text: (literals: string | RN.TextStyle | TemplateStringsArray | StyleCallback<RN.TextStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             allowFontScaling?: boolean | undefined;
             ellipsizeMode?: "head" | "middle" | "tail" | "clip" | undefined;
@@ -1236,7 +1245,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onPressIn?: ((event: RN.GestureResponderEvent) => void) | undefined;
             onPressOut?: ((event: RN.GestureResponderEvent) => void) | undefined;
             onLongPress?: ((event: RN.GestureResponderEvent) => void) | undefined;
-            style?: StyleValue<RN.TextStyle, V> | undefined;
+            style?: StyleValue<RN.TextStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             testID?: string | undefined;
             nativeID?: string | undefined;
             maxFontSizeMultiplier?: number | null | undefined;
@@ -1268,7 +1277,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onMagicTap?: (() => void) | undefined;
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        TextInput: (literals: string | RN.TextStyle | TemplateStringsArray | StyleCallback<RN.TextStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        TextInput: (literals: string | RN.TextStyle | TemplateStringsArray | StyleCallback<RN.TextStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             allowFontScaling?: boolean | undefined;
             autoCapitalize?: "none" | "sentences" | "words" | "characters" | undefined;
@@ -1305,7 +1314,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
                 end?: number | undefined;
             } | undefined;
             selectionColor?: RN.ColorValue | undefined;
-            style?: StyleValue<RN.TextStyle, V> | undefined;
+            style?: StyleValue<RN.TextStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             textAlign?: "left" | "right" | "center" | undefined;
             testID?: string | undefined;
             inputAccessoryViewID?: string | undefined;
@@ -1373,7 +1382,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             rejectResponderTermination?: boolean | null | undefined;
             selectionState?: RN.DocumentSelectionState | undefined;
             spellCheck?: boolean | undefined;
-            textContentType?: "name" | "none" | "URL" | "addressCity" | "addressCityAndState" | "addressState" | "countryName" | "creditCardNumber" | "emailAddress" | "familyName" | "fullStreetAddress" | "givenName" | "jobTitle" | "location" | "middleName" | "namePrefix" | "nameSuffix" | "nickname" | "organizationName" | "postalCode" | "streetAddressLine1" | "streetAddressLine2" | "sublocality" | "telephoneNumber" | "username" | "password" | "newPassword" | "oneTimeCode" | undefined;
+            textContentType?: "none" | "name" | "URL" | "addressCity" | "addressCityAndState" | "addressState" | "countryName" | "creditCardNumber" | "emailAddress" | "familyName" | "fullStreetAddress" | "givenName" | "jobTitle" | "location" | "middleName" | "namePrefix" | "nameSuffix" | "nickname" | "organizationName" | "postalCode" | "streetAddressLine1" | "streetAddressLine2" | "sublocality" | "telephoneNumber" | "username" | "password" | "newPassword" | "oneTimeCode" | undefined;
             scrollEnabled?: boolean | undefined;
             autoCompleteType?: "name" | "email" | "username" | "password" | "cc-csc" | "cc-exp" | "cc-exp-month" | "cc-exp-year" | "cc-number" | "postal-code" | "street-address" | "tel" | "off" | undefined;
             importantForAutofill?: "auto" | "yes" | "no" | "noExcludeDescendants" | "yesExcludeDescendants" | undefined;
@@ -1387,12 +1396,12 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             textAlignVertical?: "bottom" | "top" | "center" | "auto" | undefined;
             showSoftInputOnFocus?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        TouchableHighlight: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        TouchableHighlight: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             activeOpacity?: number | undefined;
             onHideUnderlay?: (() => void) | undefined;
             onShowUnderlay?: (() => void) | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             underlayColor?: RN.ColorValue | undefined;
             delayLongPress?: number | undefined;
             delayPressIn?: number | undefined;
@@ -1431,7 +1440,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onMagicTap?: (() => void) | undefined;
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        TouchableNativeFeedback: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        TouchableNativeFeedback: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             background?: RN.BackgroundPropType | undefined;
             useForeground?: boolean | undefined;
@@ -1447,7 +1456,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onPress?: ((event: RN.GestureResponderEvent) => void) | undefined;
             onPressIn?: ((event: RN.GestureResponderEvent) => void) | undefined;
             onPressOut?: ((event: RN.GestureResponderEvent) => void) | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             pressRetentionOffset?: RN.Insets | undefined;
             testID?: string | undefined;
             hasTVPreferredFocus?: boolean | undefined;
@@ -1473,7 +1482,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onMagicTap?: (() => void) | undefined;
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        TouchableOpacity: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        TouchableOpacity: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             activeOpacity?: number | undefined;
             delayLongPress?: number | undefined;
@@ -1488,7 +1497,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onPress?: ((event: RN.GestureResponderEvent) => void) | undefined;
             onPressIn?: ((event: RN.GestureResponderEvent) => void) | undefined;
             onPressOut?: ((event: RN.GestureResponderEvent) => void) | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             pressRetentionOffset?: RN.Insets | undefined;
             testID?: string | undefined;
             hasTVPreferredFocus?: boolean | undefined;
@@ -1514,7 +1523,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onMagicTap?: (() => void) | undefined;
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        TouchableWithoutFeedback: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        TouchableWithoutFeedback: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             delayLongPress?: number | undefined;
             delayPressIn?: number | undefined;
@@ -1528,7 +1537,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onPress?: ((event: RN.GestureResponderEvent) => void) | undefined;
             onPressIn?: ((event: RN.GestureResponderEvent) => void) | undefined;
             onPressOut?: ((event: RN.GestureResponderEvent) => void) | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             pressRetentionOffset?: RN.Insets | undefined;
             testID?: string | undefined;
             hasTVPreferredFocus?: boolean | undefined;
@@ -1554,13 +1563,13 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             onMagicTap?: (() => void) | undefined;
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
-        View: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+        View: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
             children?: React.ReactNode;
             hitSlop?: RN.Insets | undefined;
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
             removeClippedSubviews?: boolean | undefined;
-            style?: StyleValue<RN.ViewStyle, V> | undefined;
+            style?: StyleValue<RN.ViewStyle, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>> | undefined;
             testID?: string | undefined;
             nativeID?: string | undefined;
             collapsable?: boolean | undefined;
@@ -1618,13 +1627,14 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             (...args: StyleArguments<Extract<keyof T_1, string>>): RN.ViewStyle | RN.ImageStyle;
             styles: T_1;
         }) & {
-            readonly one: <S extends RNStyles>(literals: string | TemplateStringsArray | S | StyleCallback<S, V>, ...placeholders: string[]) => ((createStyle?: unknown) => {}) & {
+            readonly one: <S extends RNStyles>(literals: string | TemplateStringsArray | S | StyleCallback<S, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => ((createStyle?: unknown) => {}) & {
                 styles: RNStyles;
             };
-            readonly cls: <S_1 extends RNStyles>(literals: string | S_1 | TemplateStringsArray | StyleCallback<S_1, V>, ...placeholders: string[]) => RN.ViewStyle | RN.ImageStyle;
-            readonly lazy: <Value extends JsonValue, S_2 extends RNStyles = RNStyles>(lazyFn: (value: Value) => StyleValue<S_2, V>) => (value?: Value | undefined) => {};
+            readonly cls: <S_1 extends RNStyles>(literals: string | S_1 | TemplateStringsArray | StyleCallback<S_1, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => RN.ViewStyle | RN.ImageStyle;
+            readonly lazy: <Value extends JsonValue, S_2 extends RNStyles = RNStyles>(lazyFn: (value: Value) => StyleValue<S_2, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>) => (value?: Value | undefined) => {};
             readonly join: (...css: string[]) => RN.ViewStyle | RN.ImageStyle;
-            readonly tokens: Record<keyof T | "default", V>;
+            readonly tokens: VT;
+            readonly themes: T;
         };
         theme: keyof T | "default";
         setTheme(theme: keyof T_2): void;
@@ -1642,24 +1652,24 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
  * @param styles - A style callback, object, or string
  * @param tokens - A map of CSS tokens for style callbacks
  */
-export declare function compileStyles<V extends DashTokens = DashTokens>(styles: StyleValue<RNStyles, V> | Falsy, tokens: V): StyleObject;
+export declare function compileStyles<V extends Record<string, unknown> = DashTokens>(styles: StyleValue<RNStyles, V> | Falsy, tokens: V): StyleObject;
 export declare type Styles = ReturnType<typeof createStyles>;
-export interface CreateStylesOptions<V extends DashTokens = DashTokens, T extends DashThemes = DashThemes> {
+export interface CreateStylesOptions<V extends DashTokens = DashTokens, T extends Record<string, unknown> = DashThemes> {
     readonly tokens?: V;
     readonly themes?: {
-        [Name in keyof T]: O.Partial<V, "deep">;
+        [Name in keyof T]: T[Name];
     };
 }
-export declare type StyleMap<S extends RNStyles, V extends DashTokens = DashTokens> = {
+export declare type StyleMap<S extends RNStyles, V extends Record<string, unknown> = DashTokens> = {
     [name: string]: string | StyleCallback<S, V> | StyleObject<S>;
 };
-export declare type StyleValue<S extends RNStyles = RNStyles, V extends DashTokens = DashTokens> = string | StyleCallback<S, V> | StyleObject<S>;
+export declare type StyleValue<S extends RNStyles = RNStyles, V extends Record<string, unknown> = DashTokens> = string | StyleCallback<S, V> | StyleObject<S>;
 export declare type StyleObject<S extends RNStyles = RNStyles> = S;
-export declare type StyleCallback<S extends RNStyles = RNStyles, V extends DashTokens = DashTokens> = (tokens: V) => StyleObject<S> | string;
+export declare type StyleCallback<S extends RNStyles = RNStyles, V extends Record<string, unknown> = DashTokens> = (tokens: V) => StyleObject<S> | string;
 export declare type RNStyles = RN.ViewStyle | RN.TextStyle | RN.ImageStyle;
-export interface DashTokens {
+export interface DashTokens extends Record<string, unknown> {
 }
-export interface DashThemes {
+export interface DashThemes extends Record<string, Record<string, unknown>> {
 }
 /**
  * The names of the themes defined in the `DashThemes` type
