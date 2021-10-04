@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/dash-ui/react-native/compare/v1.1.0...v1.1.1) (2021-10-04)
+
+
+### Bug Fixes
+
+* use Object.assign instead of StyleSheet.flatten because it has to be faster ([b701dc4](https://github.com/dash-ui/react-native/commit/b701dc434652d926906b2d1ab031903057db1bef))
+
 # [1.1.0](https://github.com/dash-ui/react-native/compare/v1.0.3...v1.1.0) (2021-10-04)
 
 
