@@ -218,8 +218,9 @@ export function createStyles<
       if (typeof style === "function" || typeof style === "string") {
         return compileStyles(style, tokens);
       } else if (Array.isArray(style)) {
-        return RN.StyleSheet.flatten(
-          style.map((s) => compileRecursiveStyles(s as any, tokens))
+        return Object.assign(
+          {},
+          ...style.map((s) => compileRecursiveStyles(s as any, tokens))
         );
       }
 
