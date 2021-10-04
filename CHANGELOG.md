@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/dash-ui/react-native/compare/v1.1.2...v1.1.3) (2021-10-04)
+
+
+### Bug Fixes
+
+* fix the style prop types for real this time ([c683ff8](https://github.com/dash-ui/react-native/commit/c683ff8f7e90b46e2202e16b76a1c7abcf246ece))
+
 ## [1.1.2](https://github.com/dash-ui/react-native/compare/v1.1.1...v1.1.2) (2021-10-04)
 
 
