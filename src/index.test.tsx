@@ -727,6 +727,34 @@ describe("styled()", () => {
     expect(view.getByTestId("test")).toHaveStyle({ backgroundColor: "white" });
   });
 
+  it("should add style from style prop array", () => {
+    const view = render(
+      <StyledView
+        style={[
+          [({ colors }) => ({ backgroundColor: colors.primary })],
+          { borderWidth: 1 },
+          [[["border-color: white;"]]],
+          null,
+          undefined,
+          false,
+          0,
+          "",
+          [{ borderBottomColor: "blue" }],
+        ]}
+        testID="test"
+      />
+    );
+
+    expect(view.getByTestId("test")).toHaveStyle({
+      backgroundColor: "white",
+      borderWidth: 1,
+      borderTopColor: "white",
+      borderRightColor: "white",
+      borderBottomColor: "blue",
+      borderLeftColor: "white",
+    });
+  });
+
   it("should add default styles", () => {
     const StyledView = styled(RN.View, {
       backgroundColor: "white",

@@ -199,6 +199,33 @@ export function createStyles<
       ValueOf<Omit<VT, "default">>
     >
   ) {
+    function compileRecursiveStyles(
+      style:
+        | RN.RecursiveArray<
+            | StyleValue<
+                Extract<Props["style"], Style>,
+                ValueOf<Omit<VT, "default">>
+              >
+            | Falsy
+          >
+        | StyleValue<
+            Extract<Props["style"], Style>,
+            ValueOf<Omit<VT, "default">>
+          >
+        | Falsy,
+      tokens: ValueOf<Omit<VT, "default">>
+    ): StyleObject {
+      if (typeof style === "function" || typeof style === "string") {
+        return compileStyles(style, tokens);
+      } else if (Array.isArray(style)) {
+        return RN.StyleSheet.flatten(
+          style.map((s) => compileRecursiveStyles(s as any, tokens))
+        );
+      }
+
+      return style || {};
+    }
+
     const RefForwardingComponent = React.forwardRef(function StyledComponent(
       {
         style,
@@ -206,10 +233,19 @@ export function createStyles<
       }: O.Overwrite<
         { children?: React.ReactNode } & Props,
         {
-          style?: StyleValue<
-            Extract<Props["style"], Style>,
-            ValueOf<Omit<VT, "default">>
-          >;
+          style?:
+            | RN.RecursiveArray<
+                | StyleValue<
+                    Extract<Props["style"], Style>,
+                    ValueOf<Omit<VT, "default">>
+                  >
+                | Falsy
+              >
+            | StyleValue<
+                Extract<Props["style"], Style>,
+                ValueOf<Omit<VT, "default">>
+              >
+            | Falsy;
         }
       >,
       ref
@@ -221,6 +257,8 @@ export function createStyles<
       const outerStyle =
         typeof style === "function" || typeof style === "string"
           ? compileStyles(style, tokens[theme] as any)
+          : Array.isArray(style)
+          ? compileRecursiveStyles(style, tokens[theme] as any)
           : style;
 
       return (
@@ -228,7 +266,7 @@ export function createStyles<
           {...(props as unknown as Props)}
           style={
             outerStyle && baseStyle
-              ? RN.StyleSheet.flatten([baseStyle, outerStyle])
+              ? { ...baseStyle, ...(outerStyle as Record<string, unknown>) }
               : outerStyle
               ? outerStyle
               : baseStyle
