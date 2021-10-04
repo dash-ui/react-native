@@ -19,10 +19,15 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
     readonly styled: {
         <Style extends RN.ViewStyle | RN.TextStyle | RN.ImageStyle, Props extends {
             style?: RN.StyleProp<Style>;
-        }>(Component: React.ComponentType<Props>, styles?: StyleValue<Extract<Props["style"], Style>, V> | undefined): React.ForwardRefExoticComponent<React.PropsWithoutRef<{ [K in keyof Props]: K extends "style" ? {
+        }>(Component: React.ComponentType<Props>, styles?: StyleValue<Extract<Props["style"], Style>, V> | undefined): React.ForwardRefExoticComponent<React.PropsWithoutRef<{ [K in keyof ({
+            children?: React.ReactNode;
+        } & Props)]: K extends "style" ? {
             style?: StyleValue<Extract<Props["style"], Style>, V> | undefined;
-        }[K] : Props[K]; }> & React.RefAttributes<unknown>>;
+        }[K] : ({
+            children?: React.ReactNode;
+        } & Props)[K]; }> & React.RefAttributes<unknown>>;
         ActivityIndicator: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             animating?: boolean | undefined;
             color?: RN.ColorValue | undefined;
             hidesWhenStopped?: boolean | undefined;
@@ -84,6 +89,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         DrawerLayoutAndroid: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             drawerBackgroundColor?: RN.ColorValue | undefined;
             drawerLockMode?: "unlocked" | "locked-closed" | "locked-open" | undefined;
             drawerPosition?: "left" | "right" | undefined;
@@ -152,6 +158,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         FlatList: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             ItemSeparatorComponent?: React.ComponentType<any> | null | undefined;
             ListEmptyComponent?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ComponentType<any> | null | undefined;
             ListFooterComponent?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ComponentType<any> | null | undefined;
@@ -316,6 +323,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             persistentScrollbar?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         Image: (literals: string | RN.ImageStyle | TemplateStringsArray | StyleCallback<RN.ImageStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             style?: StyleValue<RN.ImageStyle, V> | undefined;
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             onError?: ((error: RN.NativeSyntheticEvent<RN.ImageErrorEventData>) => void) | undefined;
@@ -363,6 +371,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         ImageBackground: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             imageStyle?: RN.StyleProp<RN.ImageStyle>;
             style?: StyleValue<RN.ViewStyle, V> | undefined;
             imageRef?: ((image: RN.Image) => void) | undefined;
@@ -412,6 +421,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         KeyboardAvoidingView: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             behavior?: "height" | "padding" | "position" | undefined;
             contentContainerStyle?: RN.StyleProp<RN.ViewStyle>;
             keyboardVerticalOffset?: number | undefined;
@@ -473,6 +483,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         Modal: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             animated?: boolean | undefined;
             animationType?: "none" | "slide" | "fade" | undefined;
             transparent?: boolean | undefined;
@@ -542,6 +553,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         NavigatorIOS: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             barTintColor?: RN.ColorValue | undefined;
             initialRoute: RN.Route;
             itemWrapperStyle?: RN.StyleProp<RN.ViewStyle>;
@@ -554,6 +566,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             style?: StyleValue<RN.ViewStyle, V> | undefined;
         } & React.RefAttributes<unknown>>;
         RecyclerViewBackedScrollView: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             contentContainerStyle?: RN.StyleProp<RN.ViewStyle>;
             decelerationRate?: number | "normal" | "fast" | undefined;
             horizontal?: boolean | null | undefined;
@@ -669,6 +682,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             persistentScrollbar?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         RefreshControl: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             onRefresh?: (() => void) | undefined;
             refreshing: boolean;
             tintColor?: RN.ColorValue | undefined;
@@ -736,6 +750,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             progressViewOffset?: number | undefined;
         } & React.RefAttributes<unknown>>;
         SafeAreaView: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             hitSlop?: RN.Insets | undefined;
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
@@ -793,6 +808,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         ScrollView: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             contentContainerStyle?: RN.StyleProp<RN.ViewStyle>;
             decelerationRate?: number | "normal" | "fast" | undefined;
             horizontal?: boolean | null | undefined;
@@ -908,6 +924,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             persistentScrollbar?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         SectionList: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             ItemSeparatorComponent?: React.ComponentType<any> | null | undefined;
             ListEmptyComponent?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ComponentType<any> | null | undefined;
             ListFooterComponent?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ComponentType<any> | null | undefined;
@@ -1077,6 +1094,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             persistentScrollbar?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         SnapshotViewIOS: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             onSnapshotReady: () => any;
             testIdentifier: string;
             hitSlop?: RN.Insets | undefined;
@@ -1136,6 +1154,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         Switch: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             thumbColor?: RN.ColorValue | undefined;
             trackColor?: {
                 false?: RN.ColorValue | null | undefined;
@@ -1206,6 +1225,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         Text: (literals: string | RN.TextStyle | TemplateStringsArray | StyleCallback<RN.TextStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             allowFontScaling?: boolean | undefined;
             ellipsizeMode?: "head" | "middle" | "tail" | "clip" | undefined;
             lineBreakMode?: "head" | "middle" | "tail" | "clip" | undefined;
@@ -1249,6 +1269,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         TextInput: (literals: string | RN.TextStyle | TemplateStringsArray | StyleCallback<RN.TextStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             allowFontScaling?: boolean | undefined;
             autoCapitalize?: "none" | "sentences" | "words" | "characters" | undefined;
             autoCorrect?: boolean | undefined;
@@ -1367,6 +1388,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             showSoftInputOnFocus?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         TouchableHighlight: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             activeOpacity?: number | undefined;
             onHideUnderlay?: (() => void) | undefined;
             onShowUnderlay?: (() => void) | undefined;
@@ -1410,6 +1432,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         TouchableNativeFeedback: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             background?: RN.BackgroundPropType | undefined;
             useForeground?: boolean | undefined;
             delayLongPress?: number | undefined;
@@ -1451,6 +1474,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         TouchableOpacity: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             activeOpacity?: number | undefined;
             delayLongPress?: number | undefined;
             delayPressIn?: number | undefined;
@@ -1491,6 +1515,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         TouchableWithoutFeedback: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             delayLongPress?: number | undefined;
             delayPressIn?: number | undefined;
             delayPressOut?: number | undefined;
@@ -1530,6 +1555,7 @@ export declare function createStyles<V extends DashTokens = DashTokens, T extend
             accessibilityIgnoresInvertColors?: boolean | undefined;
         } & React.RefAttributes<unknown>>;
         View: (literals: string | RN.ViewStyle | TemplateStringsArray | StyleCallback<RN.ViewStyle, V>, ...placeholders: string[]) => React.ForwardRefExoticComponent<{
+            children?: React.ReactNode;
             hitSlop?: RN.Insets | undefined;
             onLayout?: ((event: RN.LayoutChangeEvent) => void) | undefined;
             pointerEvents?: "auto" | "none" | "box-none" | "box-only" | undefined;
