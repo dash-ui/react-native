@@ -188,7 +188,7 @@ export function createStyles<
         style,
         ...props
       }: O.Overwrite<
-        Props,
+        O.Merge<{ children?: React.ReactNode }, Props, "deep">,
         { style?: StyleValue<Extract<Props["style"], Style>, V> }
       >,
       ref
