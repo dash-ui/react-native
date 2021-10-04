@@ -700,6 +700,13 @@ describe("styled()", () => {
         secondary: "black",
       },
     },
+    themes: {
+      light: {
+        colors: {
+          primaryText: "black",
+        },
+      },
+    },
   });
   const StyledView = styled(RN.View);
 

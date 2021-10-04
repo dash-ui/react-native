@@ -200,19 +200,7 @@ export function createStyles<
     >
   ) {
     function compileRecursiveStyles(
-      style:
-        | RN.RecursiveArray<
-            | StyleValue<
-                Extract<Props["style"], Style>,
-                ValueOf<Omit<VT, "default">>
-              >
-            | Falsy
-          >
-        | StyleValue<
-            Extract<Props["style"], Style>,
-            ValueOf<Omit<VT, "default">>
-          >
-        | Falsy,
+      style: RN.RecursiveArray<StyleValue | Falsy> | StyleValue | Falsy,
       tokens: ValueOf<Omit<VT, "default">>
     ): StyleObject {
       if (typeof style === "function" || typeof style === "string") {
@@ -259,7 +247,7 @@ export function createStyles<
         typeof style === "function" || typeof style === "string"
           ? compileStyles(style, tokens[theme] as any)
           : Array.isArray(style)
-          ? compileRecursiveStyles(style, tokens[theme] as any)
+          ? compileRecursiveStyles(style as any, tokens[theme] as any)
           : style;
 
       return (
