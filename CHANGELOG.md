@@ -1,3 +1,11 @@
+## [1.0.2](https://github.com/dash-ui/react-native/compare/v1.0.1...v1.0.2) (2021-10-04)
+
+
+### Bug Fixes
+
+* fix styled type to allow children ([17c3008](https://github.com/dash-ui/react-native/commit/17c30086320f4990fac7350e1e0e2f42dda7752e))
+* fix the types for real ([06349e3](https://github.com/dash-ui/react-native/commit/06349e3cd9b7feb90f3539d9046755fe3cfe2a5c))
+
 ## [1.0.1](https://github.com/dash-ui/react-native/compare/v1.0.0...v1.0.1) (2021-10-03)
 
 
