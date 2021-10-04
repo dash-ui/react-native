@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/dash-ui/react-native/compare/v1.1.1...v1.1.2) (2021-10-04)
+
+
+### Bug Fixes
+
+* fix theme types ([7653520](https://github.com/dash-ui/react-native/commit/76535205475e0be983b3f642dc7747828436d1ec))
+
 ## [1.1.1](https://github.com/dash-ui/react-native/compare/v1.1.0...v1.1.1) (2021-10-04)
 
 
