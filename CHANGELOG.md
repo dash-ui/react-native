@@ -1,3 +1,11 @@
+## [1.1.4](https://github.com/dash-ui/react-native/compare/v1.1.3...v1.1.4) (2021-10-04)
+
+
+### Bug Fixes
+
+* prevent overwriting cached objects in style() ([827acc9](https://github.com/dash-ui/react-native/commit/827acc997d77f8728909792a326c038734a08e73))
+* remove superfluous cache ([6113157](https://github.com/dash-ui/react-native/commit/61131573cf58d83651e783774da0196ddab99323))
+
 ## [1.1.3](https://github.com/dash-ui/react-native/compare/v1.1.2...v1.1.3) (2021-10-04)
 
 
