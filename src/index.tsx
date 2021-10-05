@@ -65,7 +65,7 @@ export function createStyles<
     const styles = compileStyles(
       compileLiterals(literals, ...placeholders),
       tokens[currentTheme]
-    );
+    ) as S;
 
     if (process.env.NODE_ENV !== "production") {
       return Object.freeze(styles);
@@ -248,13 +248,16 @@ export function createStyles<
     ) {
       const { theme } = useDash();
       const baseStyle = styles
-        ? compileStyles(styles, tokens[theme] as any)
+        ? compileStyles<Style>(styles as any, tokens[theme] as any)
         : void 0;
       const outerStyle =
         typeof style === "function" || typeof style === "string"
-          ? compileStyles(style, tokens[theme] as any)
+          ? compileStyles<Style>(style as any, tokens[theme] as any)
           : Array.isArray(style)
-          ? compileRecursiveStyles(style as any, tokens[theme] as any)
+          ? (compileRecursiveStyles(
+              style as any,
+              tokens[theme] as any
+            ) as Style)
           : style;
 
       return (
@@ -423,17 +426,17 @@ export function createStyles<
  * @param styles - A style callback, object, or string
  * @param tokens - A map of CSS tokens for style callbacks
  */
-export function compileStyles<V extends Record<string, unknown> = DashTokens>(
-  styles: StyleValue<RNStyles, V> | Falsy,
-  tokens: V
-): StyleObject {
+export function compileStyles<
+  S extends RNStyles,
+  V extends Record<string, unknown> = DashTokens
+>(styles: StyleValue<S, V> | Falsy, tokens: V): S {
   const value = typeof styles === "function" ? styles(tokens) : styles;
   if (typeof value !== "string") {
-    return value || {};
+    return value || ({} as S);
   }
 
   const cachedStyle = compileCache.get(value);
-  if (cachedStyle) return cachedStyle;
+  if (cachedStyle) return cachedStyle as S;
 
   const stylePairs: [string, string][] = [];
   const splitValue = value.split(";");
@@ -446,7 +449,7 @@ export function compileStyles<V extends Record<string, unknown> = DashTokens>(
   try {
     const style = cssToRN(stylePairs);
     compileCache.set(value, style);
-    return style;
+    return style as unknown as S;
   } catch (error: any) {
     const msg = error.message;
 
@@ -464,7 +467,7 @@ export function compileStyles<V extends Record<string, unknown> = DashTokens>(
 
     const style = {};
     compileCache.set(value, style);
-    return style;
+    return style as S;
   }
 }
 
