@@ -1,3 +1,10 @@
+## [1.1.5](https://github.com/dash-ui/react-native/compare/v1.1.4...v1.1.5) (2021-10-05)
+
+
+### Bug Fixes
+
+* make compileStyles output type more specific ([cb71335](https://github.com/dash-ui/react-native/commit/cb7133569fb663e349fddc599b43b36e78de28fa))
+
 ## [1.1.4](https://github.com/dash-ui/react-native/compare/v1.1.3...v1.1.4) (2021-10-04)
 
 
