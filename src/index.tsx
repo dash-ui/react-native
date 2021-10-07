@@ -61,7 +61,7 @@ export function createStyles<
       | StyleObject<S>
       | StyleCallback<S, ValueOf<Omit<VT, "default">>>,
     ...placeholders: string[]
-  ) {
+  ): S {
     const styles = compileStyles(
       compileLiterals(literals, ...placeholders),
       tokens[currentTheme]
@@ -139,8 +139,8 @@ export function createStyles<
         }
 
         return Object.assign(
-          function oneStyle(createStyle?: unknown) {
-            if (!createStyle && createStyle !== void 0) return emptyObj;
+          function oneStyle(createStyle?: unknown): S {
+            if (!createStyle && createStyle !== void 0) return emptyObj as S;
             return styles;
           },
           { styles }
@@ -150,8 +150,8 @@ export function createStyles<
       lazy<Value extends JsonValue, S extends RNStyles = RNStyles>(
         lazyFn: (value: Value) => StyleValue<S, ValueOf<Omit<VT, "default">>>
       ) {
-        return function (value?: Value) {
-          if (value === undefined) return emptyObj;
+        return function (value?: Value): S {
+          if (value === undefined) return emptyObj as S;
           let styles = compileStyles(
             lazyFn(value),
             tokens[currentTheme] as any
@@ -164,18 +164,22 @@ export function createStyles<
           return styles;
         };
       },
-      join(...css: string[]) {
-        return cls("".concat(...css));
+      join<S extends RNStyles = RNStyles>(...css: string[]) {
+        return cls<S>("".concat(...css));
       },
       tokens,
       themes,
     } as const
   );
 
-  const DashContext = React.createContext({
+  const DashContext = React.createContext<{
+    styles: typeof styles;
+    theme: typeof currentTheme;
+    setTheme(theme: typeof currentTheme): void;
+  }>({
     styles,
     theme: currentTheme,
-    setTheme(theme: keyof T) {
+    setTheme(theme) {
       /* istanbul ignore next */
       console.error("DashContext was consumed outside of a Provider");
     },
@@ -188,15 +192,11 @@ export function createStyles<
     return React.useContext(DashContext);
   }
 
-  function styled<
-    Style extends RN.ViewStyle | RN.TextStyle | RN.ImageStyle,
-    Props extends {
-      style?: RN.StyleProp<Style>;
-    }
-  >(
+  function styled<StyleProps extends {}, Props extends {} = {}>(
     Component: React.ComponentType<Props>,
-    styles?: StyleValue<
-      Extract<Props["style"], Style>,
+    styles?: StyledValue<
+      Omit<Props, keyof StyleProps> & StyleProps,
+      "style" extends keyof Props ? Extract<Props["style"], {}> : RNStyles,
       ValueOf<Omit<VT, "default">>
     >
   ) {
@@ -217,55 +217,40 @@ export function createStyles<
     }
 
     const RefForwardingComponent = React.forwardRef(function StyledComponent(
-      {
-        style,
-        ...props
-      }: O.Overwrite<
-        { children?: React.ReactNode } & Props,
-        {
-          style?:
-            | RN.RecursiveArray<
-                | StyleValue<
-                    Extract<Props["style"], Style>,
-                    ValueOf<Omit<VT, "default">>
-                  >
-                | undefined
-                | boolean
-                | null
-                | number
-              >
-            | StyleValue<
-                Extract<Props["style"], Style>,
-                ValueOf<Omit<VT, "default">>
-              >
-            | undefined
-            | boolean
-            | null
-            | number;
-        }
-      >,
+      props: Omit<Props, "style"> & {
+        children?: "children" extends keyof Props
+          ? Props["children"]
+          : React.ReactNode;
+        style?: StyleProp<
+          "style" extends keyof Props ? Extract<Props["style"], {}> : RNStyles,
+          ValueOf<Omit<VT, "default">>
+        >;
+      } & StyleProps,
       ref
     ) {
       const { theme } = useDash();
       const baseStyle = styles
-        ? compileStyles<Style>(styles as any, tokens[theme] as any)
+        ? compileStyles(
+            (typeof styles === "function"
+              ? (tokens: ValueOf<Omit<VT, "default">>) =>
+                  styles(tokens, props as any)
+              : styles) as any,
+            tokens[theme]
+          )
         : void 0;
       const outerStyle =
-        typeof style === "function" || typeof style === "string"
-          ? compileStyles<Style>(style as any, tokens[theme] as any)
-          : Array.isArray(style)
-          ? (compileRecursiveStyles(
-              style as any,
-              tokens[theme] as any
-            ) as Style)
-          : style;
+        typeof props.style === "function" || typeof props.style === "string"
+          ? compileStyles(props.style as any, tokens[theme])
+          : Array.isArray(props.style)
+          ? compileRecursiveStyles(props.style as any, tokens[theme] as any)
+          : props.style;
 
       return (
         <Component
           {...(props as unknown as Props)}
           style={
             outerStyle && baseStyle
-              ? { ...baseStyle, ...(outerStyle as Record<string, unknown>) }
+              ? { ...baseStyle, ...outerStyle }
               : outerStyle
               ? outerStyle
               : baseStyle
@@ -284,28 +269,29 @@ export function createStyles<
     return RefForwardingComponent;
   }
 
-  function wrapStyled<
-    Style extends RN.ViewStyle | RN.TextStyle | RN.ImageStyle,
-    Props extends {
-      style?: RN.StyleProp<Style>;
-    }
-  >(Component: React.ComponentType<Props>) {
-    return function styledWrapper(
+  function wrapStyled<Props extends {}>(Component: React.ComponentType<Props>) {
+    return function styledWrapper<StyleProps extends {}>(
       literals:
         | TemplateStringsArray
         | string
-        | StyleObject<Extract<Props["style"], Style>>
-        | StyleCallback<
-            Extract<Props["style"], Style>,
+        | ("style" extends keyof Props ? Extract<Props["style"], {}> : RNStyles)
+        | StyledCallback<
+            StyleProps,
+            "style" extends keyof Props
+              ? Extract<Props["style"], RNStyles>
+              : RNStyles,
             ValueOf<Omit<VT, "default">>
           >,
       ...placeholders: string[]
     ) {
-      return styled(
+      return styled<StyleProps, Props>(
         Component,
         Array.isArray(literals)
-          ? compileLiterals(literals, ...placeholders)
-          : literals
+          ? compileLiterals(
+              literals as unknown as TemplateStringsArray,
+              ...placeholders
+            )
+          : (literals as any)
       );
     };
   }
@@ -345,9 +331,9 @@ export function createStyles<
       onThemeChange,
       children,
     }: {
-      defaultTheme?: keyof T;
-      theme?: keyof T;
-      onThemeChange?: (theme: keyof T) => void;
+      defaultTheme?: typeof currentTheme;
+      theme?: typeof currentTheme;
+      onThemeChange?: (theme: typeof currentTheme) => void;
       children?: React.ReactNode;
     }) {
       const colorScheme = RN.useColorScheme();
@@ -427,7 +413,7 @@ export function createStyles<
  * @param tokens - A map of CSS tokens for style callbacks
  */
 export function compileStyles<
-  S extends RNStyles,
+  S extends RNStyles = RNStyles,
   V extends Record<string, unknown> = DashTokens
 >(styles: StyleValue<S, V> | Falsy, tokens: V): S {
   const value = typeof styles === "function" ? styles(tokens) : styles;
@@ -491,7 +477,7 @@ function mergeTokens<
 const propertyValuePattern = /\s*([^\s]+)\s*:\s*(.+?)\s*$/;
 
 function compileLiterals<
-  S extends RNStyles,
+  S extends RNStyles = RNStyles,
   V extends Record<string, unknown> = DashTokens
 >(
   literals:
@@ -500,7 +486,7 @@ function compileLiterals<
     | StyleObject<S>
     | StyleCallback<S, V>,
   ...replacements: string[]
-) {
+): S | string {
   return Array.isArray(literals)
     ? literals.reduce(
         (curr, next, i) => curr + next + (replacements[i] || ""),
@@ -539,6 +525,34 @@ export type StyleCallback<
   S extends RNStyles = RNStyles,
   V extends Record<string, unknown> = DashTokens
 > = (tokens: V) => StyleObject<S> | string;
+
+export type StyledValue<
+  P extends {} = {},
+  S extends RNStyles = RNStyles,
+  V extends Record<string, unknown> = DashTokens
+> = string | StyledCallback<P, S, V> | StyleObject<S>;
+
+export type StyledCallback<
+  P extends {} = {},
+  S extends RNStyles = RNStyles,
+  V extends Record<string, unknown> = DashTokens
+> = (tokens: V, props: P) => StyleObject<S> | string;
+
+export type StyleProp<
+  S extends
+    | RN.Falsy
+    | RNStyles
+    | RN.RegisteredStyle<RNStyles>
+    | RN.RecursiveArray<StylePropBase> = RNStyles,
+  V extends Record<string, unknown> = DashTokens
+> =
+  | RN.RecursiveArray<StylePropBase<Extract<S, {}>, V> | RN.Falsy>
+  | StylePropBase<Extract<S, {}>, V>;
+
+type StylePropBase<
+  S extends RNStyles = RNStyles,
+  V extends Record<string, unknown> = DashTokens
+> = StyleValue<S, V> | RN.RegisteredStyle<S> | RN.Falsy;
 
 export type RNStyles = RN.ViewStyle | RN.TextStyle | RN.ImageStyle;
 export interface DashTokens extends Record<string, unknown> {}

@@ -597,7 +597,6 @@ describe("styles.lazy()", () => {
   it("should freeze object when not in production", () => {
     const style = styles.lazy((color: "red" | "blue") => ({ color }));
     const output = style("red");
-    // @ts-expect-error
     expect(() => (output.color = "blue")).toThrow();
   });
 
@@ -605,7 +604,6 @@ describe("styles.lazy()", () => {
     process.env.NODE_ENV = "production";
     const style = styles.lazy((color: "red" | "blue") => ({ color }));
     const output = style("red");
-    // @ts-expect-error
     output.color = "blue";
     expect(output).toEqual({ color: "blue" });
     process.env.NODE_ENV = "test";
@@ -749,7 +747,6 @@ describe("styled()", () => {
           null,
           undefined,
           false,
-          0,
           "",
           [{ borderBottomColor: "blue" }],
         ]}
@@ -816,6 +813,93 @@ describe("styled()", () => {
       backgroundColor: "white",
     });
   });
+
+  it("should lazily evaluate styles", () => {
+    const fontSizes = { xs: 12, sm: 14 };
+    const StyledText = styled(
+      RN.Text,
+      (t, p: { size: keyof typeof fontSizes }) => ({
+        color: t.colors.primaryText,
+        fontSize: fontSizes[p.size],
+      })
+    );
+    const view = render(<StyledText size="sm" testID="test" />);
+
+    expect(view.getByTestId("test")).toHaveStyle({
+      color: "black",
+    });
+
+    const viewB = render(<StyledText size="sm" testID="test" />);
+
+    expect(viewB.getByTestId("test")).toHaveStyle({
+      color: "black",
+      fontSize: 14,
+    });
+  });
+
+  it("should lazily evaluate composed styles", () => {
+    const fontSizes = { xs: 12, sm: 14 };
+    const StyledText_ = styled<{ size?: keyof typeof fontSizes }, RN.TextProps>(
+      RN.Text,
+      (t, p) => ({
+        color: t.colors.primaryText,
+        fontSize: p.size && fontSizes[p.size],
+      })
+    );
+    const StyledText = styled(
+      StyledText_,
+      (t, p: { weight?: "normal" | "bold" }) => ({
+        color: t.colors.primaryText,
+        fontWeight: p.weight,
+      })
+    );
+    const view = render(<StyledText testID="test" />);
+
+    expect(view.getByTestId("test")).toHaveStyle({
+      color: "black",
+    });
+
+    const viewB = render(<StyledText size="sm" testID="test" />);
+
+    expect(viewB.getByTestId("test")).toHaveStyle({
+      color: "black",
+      fontSize: 14,
+    });
+
+    const viewC = render(<StyledText size="sm" weight="bold" testID="test" />);
+
+    expect(viewC.getByTestId("test")).toHaveStyle({
+      color: "black",
+      fontSize: 14,
+      fontWeight: "bold",
+    });
+  });
+
+  it("should create from custom component", () => {
+    const MyComponent = (props: {
+      style: RN.TextStyle;
+      children: string;
+      testID?: RN.ViewProps["testID"];
+    }) => {
+      return <RN.Text style={props.style}>{props.children}</RN.Text>;
+    };
+
+    const StyledText = styled(
+      MyComponent,
+      (t, p: { weight: "normal" | "bold" }) => ({
+        color: t.colors.primaryText,
+        fontWeight: p.weight,
+      })
+    );
+    const view = render(
+      <StyledText weight="bold" testID="test">
+        Hello
+      </StyledText>
+    );
+    expect(view.getByText("Hello")).toHaveStyle({
+      fontWeight: "bold",
+    });
+  });
 });
 
 describe("styled.View()", () => {
@@ -861,10 +945,22 @@ describe("styled.View()", () => {
   it("should add default styles w/ function syntax", () => {
     const StyledView = styled.View(
       ({ colors }) => `
-      background-color: ${colors.primary};
-    `
+        background-color: ${colors.primary};
+      `
     );
     const view = render(<StyledView testID="test" />);
+    expect(view.getByTestId("test")).toHaveStyle({
+      backgroundColor: "white",
+    });
+  });
+
+  it("should create styles from props", () => {
+    const StyledView = styled.View(
+      ({ colors }, props: { backgroundColor: "primary" | "secondary" }) => `
+        background-color: ${colors[props.backgroundColor]};
+      `
+    );
+    const view = render(<StyledView backgroundColor="primary" testID="test" />);
     expect(view.getByTestId("test")).toHaveStyle({
       backgroundColor: "white",
     });
