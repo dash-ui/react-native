@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/dash-ui/react-native/compare/v1.1.5...v1.2.0) (2021-10-07)
+
+
+### Features
+
+* add props to styled components ([ea904de](https://github.com/dash-ui/react-native/commit/ea904dedf9f26d0abd14406d91c97a499be26e25))
+
 ## [1.1.5](https://github.com/dash-ui/react-native/compare/v1.1.4...v1.1.5) (2021-10-05)
 
 
