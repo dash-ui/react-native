@@ -133,7 +133,8 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             readonly tokens: VT;
             readonly themes: T;
         };
-        theme: keyof T | "default";
+        tokens: VT[keyof VT];
+        theme: keyof VT;
         setTheme(theme: keyof T | "default"): void;
     };
     readonly DashProvider: ({ theme: controlledTheme, defaultTheme, onThemeChange, children, }: {

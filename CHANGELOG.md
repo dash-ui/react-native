@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/dash-ui/react-native/compare/v1.2.1...v1.3.0) (2021-10-09)
+
+
+### Features
+
+* add tokens to dash context ([ece7f50](https://github.com/dash-ui/react-native/commit/ece7f50f874830a0d6e58bb7adc250dd56a4f51e))
+
 ## [1.2.1](https://github.com/dash-ui/react-native/compare/v1.2.0...v1.2.1) (2021-10-09)
 
 
