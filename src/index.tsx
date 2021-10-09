@@ -174,10 +174,12 @@ export function createStyles<
 
   const DashContext = React.createContext<{
     styles: typeof styles;
-    theme: typeof currentTheme;
+    tokens: VT[keyof VT];
+    theme: keyof VT;
     setTheme(theme: typeof currentTheme): void;
   }>({
     styles,
+    tokens: tokens[currentTheme],
     theme: currentTheme,
     setTheme(theme) {
       /* istanbul ignore next */
@@ -228,7 +230,7 @@ export function createStyles<
       } & StyleProps,
       ref
     ) {
-      const { theme } = useDash();
+      const dash = useDash();
       const baseStyle =
         !styles || typeof styles === "object"
           ? styles
@@ -237,14 +239,14 @@ export function createStyles<
                 ? (tokens: ValueOf<Omit<VT, "default">>) =>
                     styles(tokens, props as any)
                 : styles) as any,
-              tokens[theme]
+              dash.tokens
             );
 
       const outerStyle =
         typeof props.style === "function" || typeof props.style === "string"
-          ? compileStyles(props.style as any, tokens[theme])
+          ? compileStyles(props.style as any, dash.tokens)
           : Array.isArray(props.style)
-          ? compileRecursiveStyles(props.style as any, tokens[theme] as any)
+          ? compileRecursiveStyles(props.style as any, dash.tokens as any)
           : props.style;
 
       return (
@@ -393,6 +395,7 @@ export function createStyles<
           value={React.useMemo(
             () => ({
               styles,
+              tokens: tokens[theme],
               theme,
               setTheme(nextTheme) {
                 if (nextTheme !== theme) storedOnChange.current?.(nextTheme);
