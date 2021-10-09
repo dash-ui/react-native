@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/dash-ui/react-native/compare/v1.3.0...v1.3.1) (2021-10-09)
+
+
+### Bug Fixes
+
+* fix tokens types in dash context ([729b249](https://github.com/dash-ui/react-native/commit/729b2499dfc63bc664c7938ac626cb3c1c838d1b))
+
 # [1.3.0](https://github.com/dash-ui/react-native/compare/v1.2.1...v1.3.0) (2021-10-09)
 
 
