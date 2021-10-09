@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/dash-ui/react-native/compare/v1.3.1...v1.3.2) (2021-10-09)
+
+
+### Bug Fixes
+
+* fix flawed styled.one() caching ([d551e15](https://github.com/dash-ui/react-native/commit/d551e154d2a9a86c7122f19826ba6e76ea94002a))
+
 ## [1.3.1](https://github.com/dash-ui/react-native/compare/v1.3.0...v1.3.1) (2021-10-09)
 
 

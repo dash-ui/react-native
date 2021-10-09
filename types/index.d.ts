@@ -16,9 +16,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
         (...args: StyleArguments<Extract<keyof T_1, string>>): RN.ViewStyle | RN.ImageStyle;
         styles: T_1;
     }) & {
-        readonly one: <S extends RNStyles>(literals: string | TemplateStringsArray | S | StyleCallback<S, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => ((createStyle?: unknown) => S) & {
-            styles: S;
-        };
+        readonly one: <S extends RNStyles>(literals: string | TemplateStringsArray | S | StyleCallback<S, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => (createStyle?: unknown) => S;
         readonly cls: <S_1 extends RNStyles>(literals: string | S_1 | TemplateStringsArray | StyleCallback<S_1, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => S_1;
         readonly lazy: <Value extends JsonValue, S_2 extends RNStyles = RNStyles>(lazyFn: (value: Value) => StyleValue<S_2, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>) => (value?: Value | undefined) => S_2;
         readonly join: <S_3 extends RNStyles = RNStyles>(...css: string[]) => S_3;
@@ -124,9 +122,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
             (...args: StyleArguments<Extract<keyof T_1, string>>): RN.ViewStyle | RN.ImageStyle;
             styles: T_1;
         }) & {
-            readonly one: <S extends RNStyles>(literals: string | TemplateStringsArray | S | StyleCallback<S, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => ((createStyle?: unknown) => S) & {
-                styles: S;
-            };
+            readonly one: <S extends RNStyles>(literals: string | TemplateStringsArray | S | StyleCallback<S, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => (createStyle?: unknown) => S;
             readonly cls: <S_1 extends RNStyles>(literals: string | S_1 | TemplateStringsArray | StyleCallback<S_1, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => S_1;
             readonly lazy: <Value extends JsonValue, S_2 extends RNStyles = RNStyles>(lazyFn: (value: Value) => StyleValue<S_2, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>) => (value?: Value | undefined) => S_2;
             readonly join: <S_3 extends RNStyles = RNStyles>(...css: string[]) => S_3;
