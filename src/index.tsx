@@ -129,22 +129,18 @@ export function createStyles<
           | StyleCallback<S, ValueOf<Omit<VT, "default">>>,
         ...placeholders: string[]
       ) {
-        let styles = compileStyles(
-          compileLiterals(literals, ...placeholders),
-          tokens[currentTheme]
-        );
+        const compiledLiterals = compileLiterals(literals, ...placeholders);
 
-        if (process.env.NODE_ENV !== "production") {
-          styles = Object.freeze(styles);
-        }
+        return function oneStyle(createStyle?: unknown): S {
+          if (!createStyle && createStyle !== void 0) return emptyObj as S;
+          let styles = compileStyles(compiledLiterals, tokens[currentTheme]);
 
-        return Object.assign(
-          function oneStyle(createStyle?: unknown): S {
-            if (!createStyle && createStyle !== void 0) return emptyObj as S;
-            return styles;
-          },
-          { styles }
-        );
+          if (process.env.NODE_ENV !== "production") {
+            styles = Object.freeze(styles);
+          }
+
+          return styles;
+        };
       },
       cls,
       lazy<Value extends JsonValue, S extends RNStyles = RNStyles>(
