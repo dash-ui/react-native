@@ -174,12 +174,12 @@ export function createStyles<
 
   const DashContext = React.createContext<{
     styles: typeof styles;
-    tokens: VT[keyof VT];
+    tokens: ValueOf<Omit<VT, "default">>;
     theme: keyof VT;
     setTheme(theme: typeof currentTheme): void;
   }>({
     styles,
-    tokens: tokens[currentTheme],
+    tokens: tokens[currentTheme] as VT[Exclude<keyof VT, "default">],
     theme: currentTheme,
     setTheme(theme) {
       /* istanbul ignore next */
@@ -395,7 +395,7 @@ export function createStyles<
           value={React.useMemo(
             () => ({
               styles,
-              tokens: tokens[theme],
+              tokens: tokens[theme] as ValueOf<Omit<VT, "default">>,
               theme,
               setTheme(nextTheme) {
                 if (nextTheme !== theme) storedOnChange.current?.(nextTheme);
