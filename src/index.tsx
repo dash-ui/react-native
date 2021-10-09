@@ -229,15 +229,17 @@ export function createStyles<
       ref
     ) {
       const { theme } = useDash();
-      const baseStyle = styles
-        ? compileStyles(
-            (typeof styles === "function"
-              ? (tokens: ValueOf<Omit<VT, "default">>) =>
-                  styles(tokens, props as any)
-              : styles) as any,
-            tokens[theme]
-          )
-        : void 0;
+      const baseStyle =
+        !styles || typeof styles === "object"
+          ? styles
+          : compileStyles(
+              (typeof styles === "function"
+                ? (tokens: ValueOf<Omit<VT, "default">>) =>
+                    styles(tokens, props as any)
+                : styles) as any,
+              tokens[theme]
+            );
+
       const outerStyle =
         typeof props.style === "function" || typeof props.style === "string"
           ? compileStyles(props.style as any, tokens[theme])
