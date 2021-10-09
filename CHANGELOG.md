@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/dash-ui/react-native/compare/v1.2.0...v1.2.1) (2021-10-09)
+
+
+### Performance Improvements
+
+* add hot path for object styles in styled ([30c6e39](https://github.com/dash-ui/react-native/commit/30c6e39515bda449e536d48cbe1280be7587ee50))
+
 # [1.2.0](https://github.com/dash-ui/react-native/compare/v1.1.5...v1.2.0) (2021-10-07)
 
 
