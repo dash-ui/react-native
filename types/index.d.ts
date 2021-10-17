@@ -2,7 +2,7 @@ import type { Falsy, StyleArguments } from "@dash-ui/styles";
 import * as React from "react";
 import * as RN from "react-native";
 import type { O } from "ts-toolbelt";
-import type { JsonValue, ValueOf } from "type-fest";
+import type { JsonValue, ValueOf, PartialDeep } from "type-fest";
 export declare function createStyles<V extends Record<string, unknown> = DashTokens, T extends Record<string, Record<string, unknown>> = DashThemes, VT extends {
     [K in keyof T]: O.Merge<V, T[K], "deep">;
 } & {
@@ -132,6 +132,8 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
         tokens: ValueOf<Omit<VT, "default">>;
         theme: keyof VT;
         setTheme(theme: keyof T | "default"): void;
+        insertTokens(nextTokens: PartialDeep<V>): void;
+        insertThemes(nextThemes: PartialDeep<Omit<VT, "default">>): void;
     };
     readonly DashProvider: ({ theme: controlledTheme, defaultTheme, onThemeChange, children, }: {
         defaultTheme?: keyof T | "default" | undefined;

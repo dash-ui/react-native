@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/dash-ui/react-native/compare/v1.3.2...v1.4.0) (2021-10-17)
+
+
+### Features
+
+* allow users to set new theme tokens ([f5e441f](https://github.com/dash-ui/react-native/commit/f5e441f472057a677043d48922c6b006ab7a06c2))
+
 ## [1.3.2](https://github.com/dash-ui/react-native/compare/v1.3.1...v1.3.2) (2021-10-09)
 
 
