@@ -4,7 +4,7 @@ import cssToRN from "css-to-react-native";
 import * as React from "react";
 import * as RN from "react-native";
 import type { O } from "ts-toolbelt";
-import type { JsonValue, ValueOf } from "type-fest";
+import type { JsonValue, ValueOf, PartialDeep } from "type-fest";
 
 const emptyObj = {};
 
@@ -173,11 +173,21 @@ export function createStyles<
     tokens: ValueOf<Omit<VT, "default">>;
     theme: keyof VT;
     setTheme(theme: typeof currentTheme): void;
+    insertTokens(nextTokens: PartialDeep<V>): void;
+    insertThemes(nextThemes: PartialDeep<Omit<VT, "default">>): void;
   }>({
     styles,
     tokens: tokens[currentTheme] as VT[Exclude<keyof VT, "default">],
     theme: currentTheme,
     setTheme(theme) {
+      /* istanbul ignore next */
+      console.error("DashContext was consumed outside of a Provider");
+    },
+    insertTokens(nextTokens) {
+      /* istanbul ignore next */
+      console.error("DashContext was consumed outside of a Provider");
+    },
+    insertThemes(nextThemes) {
       /* istanbul ignore next */
       console.error("DashContext was consumed outside of a Provider");
     },
@@ -356,6 +366,7 @@ export function createStyles<
 
         return currentTheme;
       });
+      const [tokenPointer, setTokenPointer] = React.useState(0);
       const theme = controlledTheme ?? userTheme;
       currentTheme = theme;
       const storedOnChange = React.useRef(onThemeChange);
@@ -397,8 +408,40 @@ export function createStyles<
                 if (nextTheme !== theme) storedOnChange.current?.(nextTheme);
                 setTheme(nextTheme);
               },
+              insertTokens(nextTokens) {
+                for (const themeName in tokens) {
+                  tokens[themeName as keyof VT] = mergeTokens(
+                    cloneDeep(tokens[themeName as keyof VT]),
+                    nextTokens as any
+                  ) as VT[keyof VT];
+
+                  if (themeName !== "default") {
+                    tokens[themeName as keyof VT] = mergeTokens(
+                      tokens[themeName as keyof VT],
+                      themes[themeName]
+                    );
+                  }
+                }
+
+                setTokenPointer((current) => current++);
+              },
+              insertThemes(nextThemes) {
+                for (const themeName in nextThemes) {
+                  tokens[themeName as keyof VT] = mergeTokens(
+                    cloneDeep(tokens[themeName]),
+                    (nextThemes as any)[themeName]
+                  ) as VT[keyof VT];
+
+                  (themes as any)[themeName] = mergeTokens(
+                    cloneDeep(themes[themeName]),
+                    (nextThemes as any)[themeName]
+                  ) as VT[keyof VT];
+                }
+
+                setTokenPointer((current) => current++);
+              },
             }),
-            [theme]
+            [theme, tokenPointer]
           )}
           children={children}
         />

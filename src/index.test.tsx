@@ -1040,6 +1040,84 @@ describe("<DashProvider>", () => {
     expect(theme).toBe("dark");
   });
 
+  it("should set new tokens", () => {
+    const { DashProvider, useDash, styles } = createStyles(stylesConfig);
+
+    function Component() {
+      const dash = useDash();
+      React.useEffect(() => {
+        dash.insertTokens({
+          spacing: [1, 2, 4],
+          colors: {
+            primary: "red",
+          },
+        });
+      }, []);
+      return null;
+    }
+
+    render(<Component />, {
+      wrapper: (props) => <DashProvider {...props} />,
+    });
+
+    expect(styles.tokens.default.spacing).toEqual([1, 2, 4]);
+    expect(styles.tokens.default.colors.primary).toBe("red");
+    expect(styles.tokens.light.colors.primary).toBe("red");
+    expect((styles.themes.light as any).colors).toBeUndefined();
+    expect(styles.tokens.dark.colors.primary).toBe("black");
+  });
+
+  it("should set new theme tokens", () => {
+    const { DashProvider, useDash, styles } = createStyles(stylesConfig);
+
+    function Component() {
+      const dash = useDash();
+      React.useEffect(() => {
+        dash.insertThemes({
+          dark: {
+            colors: {
+              primary: "red",
+            },
+          },
+        });
+      }, []);
+      return null;
+    }
+
+    render(<Component />, {
+      wrapper: (props) => <DashProvider {...props} />,
+    });
+
+    expect(styles.tokens.dark.colors.primary).toBe("red");
+    expect((styles.themes.light as any).colors).toBeUndefined();
+    expect(styles.themes.dark.colors.primary).toBe("red");
+  });
+
+  it("should set new light theme tokens", () => {
+    const { DashProvider, useDash, styles } = createStyles(stylesConfig);
+
+    function Component() {
+      const dash = useDash();
+      React.useEffect(() => {
+        dash.insertThemes({
+          light: {
+            colors: {
+              primary: "red",
+            },
+          },
+        });
+      }, []);
+      return null;
+    }
+
+    render(<Component />, {
+      wrapper: (props) => <DashProvider {...props} />,
+    });
+
+    expect(styles.tokens.light.colors.primary).toBe("red");
+    expect((styles.themes.light as any).colors.primary).toBe('red');
+  });
+
   it("should set a default theme", () => {
     const { DashProvider, useDash } = createStyles(stylesConfig);
     let theme;
