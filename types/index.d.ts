@@ -135,10 +135,11 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
         insertTokens(nextTokens: PartialDeep<V>): void;
         insertThemes(nextThemes: PartialDeep<Omit<VT, "default">>): void;
     };
-    readonly DashProvider: ({ theme: controlledTheme, defaultTheme, onThemeChange, children, }: {
+    readonly DashProvider: ({ theme: controlledTheme, defaultTheme, onThemeChange, disableAutoThemeChange, children, }: {
         defaultTheme?: keyof T | "default" | undefined;
         theme?: keyof T | "default" | undefined;
         onThemeChange?: ((theme: keyof T | "default") => void) | undefined;
+        disableAutoThemeChange?: boolean | undefined;
         children?: React.ReactNode;
     }) => JSX.Element;
 };

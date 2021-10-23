@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/dash-ui/react-native/compare/v1.4.1...v1.5.0) (2021-10-23)
+
+
+### Features
+
+* allow user to disable auto theme changing with a prop ([6462472](https://github.com/dash-ui/react-native/commit/64624722f04261d1cbe3946281edff9200c3a8ab))
+
 ## [1.4.1](https://github.com/dash-ui/react-native/compare/v1.4.0...v1.4.1) (2021-10-23)
 
 
