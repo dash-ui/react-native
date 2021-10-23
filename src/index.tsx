@@ -339,11 +339,13 @@ export function createStyles<
       theme: controlledTheme,
       defaultTheme,
       onThemeChange,
+      disableAutoThemeChange,
       children,
     }: {
       defaultTheme?: typeof currentTheme;
       theme?: typeof currentTheme;
       onThemeChange?: (theme: typeof currentTheme) => void;
+      disableAutoThemeChange?: boolean;
       children?: React.ReactNode;
     }) {
       const colorScheme = RN.useColorScheme();
@@ -387,7 +389,8 @@ export function createStyles<
           !controlledTheme &&
           colorScheme &&
           colorScheme !== theme &&
-          isAutoThemeable
+          isAutoThemeable &&
+          !disableAutoThemeChange
         ) {
           currentTheme = colorScheme as keyof T;
           setTheme(currentTheme);

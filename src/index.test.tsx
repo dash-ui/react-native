@@ -1115,7 +1115,7 @@ describe("<DashProvider>", () => {
     });
 
     expect(styles.tokens.light.colors.primary).toBe("red");
-    expect((styles.themes.light as any).colors.primary).toBe('red');
+    expect((styles.themes.light as any).colors.primary).toBe("red");
   });
 
   it("should set a default theme", () => {
@@ -1249,6 +1249,32 @@ describe("<DashProvider>", () => {
     });
 
     render(<DashProvider theme="light" onThemeChange={onThemeChange} />);
+
+    colorScheme = "dark";
+    act(() => {
+      listeners.forEach((listener) => listener(colorScheme));
+    });
+
+    expect(onThemeChange).not.toBeCalled();
+  });
+
+  it("should not react to useColorScheme changes if disableAutoThemeChange", () => {
+    const { DashProvider } = createStyles(stylesConfig);
+    const onThemeChange = jest.fn();
+    jest.spyOn(RN.Appearance, "addChangeListener");
+    const listeners: any[] = [];
+    // @ts-expect-error
+    RN.Appearance.addChangeListener.mockImplementation((listener) => {
+      listeners.push(listener);
+    });
+
+    render(
+      <DashProvider
+        defaultTheme="light"
+        disableAutoThemeChange
+        onThemeChange={onThemeChange}
+      />
+    );
 
     colorScheme = "dark";
     act(() => {
