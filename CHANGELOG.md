@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/dash-ui/react-native/compare/v1.4.0...v1.4.1) (2021-10-23)
+
+
+### Bug Fixes
+
+* fix token pointer ([ee6b110](https://github.com/dash-ui/react-native/commit/ee6b11015ddec83ffc392119f5eb1545cbaafdbd))
+
 # [1.4.0](https://github.com/dash-ui/react-native/compare/v1.3.2...v1.4.0) (2021-10-17)
 
 
