@@ -423,7 +423,7 @@ export function createStyles<
                   }
                 }
 
-                setTokenPointer((current) => current++);
+                setTokenPointer((current) => ++current);
               },
               insertThemes(nextThemes) {
                 for (const themeName in nextThemes) {
@@ -438,7 +438,7 @@ export function createStyles<
                   ) as VT[keyof VT];
                 }
 
-                setTokenPointer((current) => current++);
+                setTokenPointer((current) => ++current);
               },
             }),
             [theme, tokenPointer]
