@@ -5,7 +5,7 @@ import type { ViewStyle } from "react-native";
 import "@testing-library/jest-native/extend-expect";
 import { compileStyles, createStyles } from "./index";
 
-describe("styles()", () => {
+describe("styles.variants()", () => {
   const { styles } = createStyles({
     tokens: {
       colors: {
@@ -17,7 +17,7 @@ describe("styles()", () => {
   });
 
   it("should convert string styles to objects", () => {
-    const style = styles({
+    const style = styles.variants({
       red: `
         color: red;
       `,
@@ -27,7 +27,7 @@ describe("styles()", () => {
   });
 
   it("should do nothing with object styles", () => {
-    const style = styles({
+    const style = styles.variants({
       default: { color: "red" },
     });
 
@@ -35,7 +35,7 @@ describe("styles()", () => {
   });
 
   it("should convert string styles to object styles returned by functions", () => {
-    const style = styles({
+    const style = styles.variants({
       default: (t) => `color: ${t.colors.primary}`,
     });
 
@@ -43,7 +43,7 @@ describe("styles()", () => {
   });
 
   it("should do nothing with object styles returned by functions", () => {
-    const style = styles({
+    const style = styles.variants({
       default: (t) => ({ color: t.colors.primary }),
     });
 
@@ -51,7 +51,7 @@ describe("styles()", () => {
   });
 
   it("should avoid loop with single string argument", () => {
-    const style = styles({
+    const style = styles.variants({
       default: (t) => ({ color: t.colors.primary }),
       blue: "color: blue",
     });
@@ -60,7 +60,7 @@ describe("styles()", () => {
   });
 
   it("should freeze object when not in production", () => {
-    const style = styles({
+    const style = styles.variants({
       default: (t) => ({ color: t.colors.primary }),
     });
     const output = style();
@@ -70,7 +70,7 @@ describe("styles()", () => {
 
   it("should not freeze object in production", () => {
     process.env.NODE_ENV = "production";
-    const style = styles({
+    const style = styles.variants({
       default: (t) => ({ color: t.colors.primary }),
     });
     const output = style();
@@ -81,7 +81,7 @@ describe("styles()", () => {
   });
 
   it("should flatten styles in order called", () => {
-    const style = styles({
+    const style = styles.variants({
       default: (t) => ({ color: t.colors.primary }),
       bgRed: { backgroundColor: "red" },
       borderBlue: `border-color: blue;`,
@@ -106,7 +106,7 @@ describe("styles()", () => {
   });
 
   it("should flatten styles in order called w/ object syntax", () => {
-    const style = styles({
+    const style = styles.variants({
       default: (t) => ({ color: t.colors.primary }),
       bgRed: { backgroundColor: "red" },
       borderBlue: `border-color: blue;`,
@@ -131,7 +131,7 @@ describe("styles()", () => {
   });
 
   it("should flatten styles in order called w/ mixed syntax", () => {
-    const style = styles({
+    const style = styles.variants({
       default: (t) => ({ color: t.colors.primary }),
       bgRed: { backgroundColor: "red" },
       borderBlue: `border-color: blue;`,
@@ -156,7 +156,7 @@ describe("styles()", () => {
   });
 
   it("should not apply falsy styles w/ object syntax", () => {
-    const style = styles({
+    const style = styles.variants({
       default: (t) => ({ color: t.colors.primary }),
       bgRed: { backgroundColor: "red" },
       borderBlue: `border-color: blue;`,
@@ -189,7 +189,7 @@ describe("styles()", () => {
   });
 
   it("should not apply falsy styles w/ string syntax", () => {
-    const style = styles({
+    const style = styles.variants({
       default: (t) => ({ color: t.colors.primary }),
       bgRed: { backgroundColor: "red" },
       borderBlue: `border-color: blue;`,
@@ -220,7 +220,7 @@ describe("styles()", () => {
     const originalConsoleError = console.error;
     console.error = jest.fn();
 
-    const style = styles({
+    const style = styles.variants({
       default: `
         border-width: 1;
       `,
@@ -234,7 +234,7 @@ describe("styles()", () => {
   });
 });
 
-describe("styles() themes", () => {
+describe("styles.variants() themes", () => {
   const stylesConfig = {
     tokens: {
       spacing: [1, 2, 4, 8, 16, 32, 64, 128, 256, 512],
@@ -257,7 +257,7 @@ describe("styles() themes", () => {
 
   it("should be the light theme by default", () => {
     const { styles } = createStyles(stylesConfig);
-    const style = styles({
+    const style = styles.variants({
       default: (t) => ({ color: t.colors.primary }),
     });
 
@@ -267,7 +267,7 @@ describe("styles() themes", () => {
   it("should be the dark theme", () => {
     colorScheme = "dark";
     const { styles } = createStyles(stylesConfig);
-    const style = styles({
+    const style = styles.variants({
       default: (t) => ({ color: t.colors.primary }),
     });
 
@@ -277,7 +277,7 @@ describe("styles() themes", () => {
   it("should be the light theme w/ no-preference", () => {
     colorScheme = null;
     const { styles } = createStyles(stylesConfig);
-    const style = styles({
+    const style = styles.variants({
       default: (t) => ({ color: t.colors.primary }),
     });
 
@@ -293,7 +293,7 @@ describe("styles() themes", () => {
         light: {},
       },
     });
-    const style = styles({
+    const style = styles.variants({
       default: (t) => ({ color: t.colors.primary }),
     });
 

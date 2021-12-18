@@ -74,8 +74,8 @@ export function createStyles<
     return styles;
   }
 
-  const styles = Object.assign(
-    function styles<T extends StyleMap<RNStyles, V>>(styleMap: T) {
+  const styles = {
+    variants<T extends StyleMap<RNStyles, V>>(styleMap: T) {
       // style('text', {})
       function style(...args: StyleArguments<Extract<keyof T, string>>) {
         const numArgs = args.length;
@@ -120,53 +120,48 @@ export function createStyles<
       style.styles = styleMap;
       return style;
     },
-    {
-      one<S extends RNStyles>(
-        literals:
-          | TemplateStringsArray
-          | string
-          | StyleObject<S>
-          | StyleCallback<S, ValueOf<Omit<VT, "default">>>,
-        ...placeholders: string[]
-      ) {
-        const compiledLiterals = compileLiterals(literals, ...placeholders);
+    one<S extends RNStyles>(
+      literals:
+        | TemplateStringsArray
+        | string
+        | StyleObject<S>
+        | StyleCallback<S, ValueOf<Omit<VT, "default">>>,
+      ...placeholders: string[]
+    ) {
+      const compiledLiterals = compileLiterals(literals, ...placeholders);
 
-        return function oneStyle(createStyle?: unknown): S {
-          if (!createStyle && createStyle !== void 0) return emptyObj as S;
-          let styles = compileStyles(compiledLiterals, tokens[currentTheme]);
+      return function oneStyle(createStyle?: unknown): S {
+        if (!createStyle && createStyle !== void 0) return emptyObj as S;
+        let styles = compileStyles(compiledLiterals, tokens[currentTheme]);
 
-          if (process.env.NODE_ENV !== "production") {
-            styles = Object.freeze(styles);
-          }
+        if (process.env.NODE_ENV !== "production") {
+          styles = Object.freeze(styles);
+        }
 
-          return styles;
-        };
-      },
-      cls,
-      lazy<Value extends JsonValue, S extends RNStyles = RNStyles>(
-        lazyFn: (value: Value) => StyleValue<S, ValueOf<Omit<VT, "default">>>
-      ) {
-        return function (value?: Value): S {
-          if (value === undefined) return emptyObj as S;
-          let styles = compileStyles(
-            lazyFn(value),
-            tokens[currentTheme] as any
-          );
+        return styles;
+      };
+    },
+    cls,
+    lazy<Value extends JsonValue, S extends RNStyles = RNStyles>(
+      lazyFn: (value: Value) => StyleValue<S, ValueOf<Omit<VT, "default">>>
+    ) {
+      return function (value?: Value): S {
+        if (value === undefined) return emptyObj as S;
+        let styles = compileStyles(lazyFn(value), tokens[currentTheme] as any);
 
-          if (process.env.NODE_ENV !== "production") {
-            styles = Object.freeze(styles);
-          }
+        if (process.env.NODE_ENV !== "production") {
+          styles = Object.freeze(styles);
+        }
 
-          return styles;
-        };
-      },
-      join<S extends RNStyles = RNStyles>(...css: string[]) {
-        return cls<S>("".concat(...css));
-      },
-      tokens,
-      themes,
-    } as const
-  );
+        return styles;
+      };
+    },
+    join<S extends RNStyles = RNStyles>(...css: string[]) {
+      return cls<S>("".concat(...css));
+    },
+    tokens,
+    themes,
+  } as const;
 
   const DashContext = React.createContext<{
     styles: typeof styles;

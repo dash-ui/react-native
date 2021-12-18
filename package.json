@@ -1,5 +1,19 @@
 {
+  "name": "@dash-ui/react-native",
   "version": "1.0.0",
+  "description": "Use your @dash-ui styles in react-native",
+  "license": "MIT",
+  "author": "Jared Lunde <jared.lunde@gmail.com> (https://jaredlunde.com/)",
+  "homepage": "https://github.com/dash-ui/react-native#readme",
+  "repository": "github:dash-ui/react-native",
+  "bugs": "https://github.com/dash-ui/react-native/issues",
+  "main": "dist/main/index.js",
+  "module": "dist/module/index.js",
+  "files": [
+    "/dist",
+    "/src",
+    "/types"
+  ],
   "scripts": {
     "build": "lundle build",
     "check-types": "lundle check-types",
@@ -9,14 +23,26 @@
     "test": "jest",
     "validate": "lundle check-types && pnpm run lint && jest --coverage"
   },
-  "keywords": [
-    "react native styles",
-    "dash react native",
-    "styled components react native",
-    "react native"
-  ],
-  "author": "Jared Lunde <jared.lunde@gmail.com> (https://jaredlunde.com/)",
-  "license": "MIT",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "sideEffects": false,
+  "types": "types/index.d.ts",
+  "dependencies": {
+    "@types/clone-deep": "^4.0.1",
+    "@types/css-to-react-native": "^3.0.0",
+    "clone-deep": "^4.0.1",
+    "css-to-react-native": "^3.0.0",
+    "ts-toolbelt": "^9.6.0",
+    "type-fest": "^2.3.4"
+  },
+  "peerDependencies": {
+    "@types/react-native": ">=0.20",
+    "react": ">=16",
+    "react-native": ">=0.20"
+  },
   "devDependencies": {
     "@commitlint/cli": "latest",
     "@commitlint/config-conventional": "latest",
@@ -44,57 +70,16 @@
     "react-test-renderer": "^17.0.2",
     "typescript": "latest"
   },
-  "name": "@dash-ui/react-native",
-  "homepage": "https://github.com/dash-ui/react-native#readme",
-  "repository": "github:dash-ui/react-native",
-  "bugs": "https://github.com/dash-ui/react-native/issues",
-  "description": "Use your @dash-ui styles in react-native",
-  "main": "dist/main/index.js",
-  "module": "dist/module/index.js",
-  "source": "src/index.tsx",
-  "types": "types/index.d.ts",
-  "exports": {
-    ".": {
-      "browser": "./dist/module/index.js",
-      "import": "./dist/esm/index.mjs",
-      "require": "./dist/main/index.js",
-      "source": "./src/index.tsx",
-      "types": "./types/index.d.ts",
-      "default": "./dist/main/index.js"
-    },
-    "./package.json": "./package.json",
-    "./": "./"
-  },
-  "files": [
-    "/dist",
-    "/src",
-    "/types"
+  "keywords": [
+    "dash react native",
+    "react native",
+    "react native styles",
+    "styled components react native"
   ],
-  "sideEffects": false,
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
-  "lint-staged": {
-    "**/*.{ts,tsx,js,jsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "**/*.{md,yml,json}": [
-      "prettier --write"
-    ]
-  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
     ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   },
   "eslintConfig": {
     "extends": [
@@ -112,6 +97,36 @@
     "test",
     "*.config.js"
   ],
+  "exports": {
+    ".": {
+      "browser": "./dist/module/index.js",
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/main/index.js",
+      "source": "./src/index.tsx",
+      "types": "./types/index.d.ts",
+      "default": "./dist/main/index.js"
+    },
+    "./package.json": "./package.json",
+    "./": "./"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "package.json": [
+      "pnpx -y prettier-package-json --write"
+    ],
+    "**/*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.{md,yml,json}": [
+      "prettier --write"
+    ]
+  },
   "release": {
     "branches": [
       "main",
@@ -137,17 +152,5 @@
       "@semantic-release/github"
     ]
   },
-  "dependencies": {
-    "@types/clone-deep": "^4.0.1",
-    "@types/css-to-react-native": "^3.0.0",
-    "clone-deep": "^4.0.1",
-    "css-to-react-native": "^3.0.0",
-    "ts-toolbelt": "^9.6.0",
-    "type-fest": "^2.3.4"
-  },
-  "peerDependencies": {
-    "@types/react-native": ">=0.20",
-    "react": ">=16",
-    "react-native": ">=0.20"
-  }
+  "source": "src/index.tsx"
 }
