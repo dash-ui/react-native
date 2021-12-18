@@ -1,3 +1,16 @@
+# [2.0.0](https://github.com/dash-ui/react-native/compare/v1.5.0...v2.0.0) (2021-12-18)
+
+
+### Code Refactoring
+
+* add "variants" to styles instance ([80ba080](https://github.com/dash-ui/react-native/commit/80ba080753822f0606789483471fce67c97be988))
+
+
+### BREAKING CHANGES
+
+* "styles" is no longer a function, it is an object. The "styles" function is now
+located at "styles.variants".
+
 # [1.5.0](https://github.com/dash-ui/react-native/compare/v1.4.1...v1.5.0) (2021-10-23)
 
 
