@@ -1,11 +1,11 @@
 import type { Falsy, StyleArguments } from "@dash-ui/styles";
+import memoize from "@essentials/memoize-one";
 import cloneDeep from "clone-deep";
 import cssToRN from "css-to-react-native";
 import * as React from "react";
 import * as RN from "react-native";
 import type { O } from "ts-toolbelt";
 import type { JsonValue, PartialDeep, ValueOf } from "type-fest";
-import memoize from "@essentials/memoize-one";
 
 const emptyObj = {};
 
@@ -154,7 +154,7 @@ export function createStyles<
         typeof literals === "function"
           ? memoize(literals, tokensAreEqual)
           : literals;
-      let compiledLiterals = compileLiterals(literals, ...placeholders);
+      const compiledLiterals = compileLiterals(literals, ...placeholders);
 
       return function oneStyle(createStyle?: unknown): S {
         if (!createStyle && createStyle !== void 0) return emptyObj as S;
@@ -275,51 +275,55 @@ export function createStyles<
       return style || {};
     }
 
-    const RefForwardingComponent = React.forwardRef(function StyledComponent(
-      props: Omit<Props, "style"> & {
-        children?: "children" extends keyof Props
-          ? Props["children"]
-          : React.ReactNode;
-        style?: StyleProp<
-          "style" extends keyof Props ? Extract<Props["style"], {}> : RNStyles,
-          ValueOf<Omit<VT, "default">>
-        >;
-      } & StyleProps,
-      ref
-    ) {
-      const dash = useDash();
-      const baseStyle =
-        !styles || typeof styles === "object"
-          ? styles
-          : compileStyles(
-              (typeof styles === "function"
-                ? (tokens: ValueOf<Omit<VT, "default">>) =>
-                    styles(tokens, props as any)
-                : styles) as any,
-              dash.tokens
-            );
+    const RefForwardingComponent = React.forwardRef(
+      (
+        props: Omit<Props, "style"> & {
+          children?: "children" extends keyof Props
+            ? Props["children"]
+            : React.ReactNode;
+          style?: StyleProp<
+            "style" extends keyof Props
+              ? Extract<Props["style"], {}>
+              : RNStyles,
+            ValueOf<Omit<VT, "default">>
+          >;
+        } & StyleProps,
+        ref
+      ) => {
+        const dash = useDash();
+        const baseStyle =
+          !styles || typeof styles === "object"
+            ? styles
+            : compileStyles(
+                (typeof styles === "function"
+                  ? (tokens: ValueOf<Omit<VT, "default">>) =>
+                      styles(tokens, props as any)
+                  : styles) as any,
+                dash.tokens
+              );
 
-      const outerStyle =
-        typeof props.style === "function" || typeof props.style === "string"
-          ? compileStyles(props.style as any, dash.tokens)
-          : Array.isArray(props.style)
-          ? compileRecursiveStyles(props.style as any, dash.tokens as any)
-          : props.style;
+        const outerStyle =
+          typeof props.style === "function" || typeof props.style === "string"
+            ? compileStyles(props.style as any, dash.tokens)
+            : Array.isArray(props.style)
+            ? compileRecursiveStyles(props.style as any, dash.tokens as any)
+            : props.style;
 
-      return (
-        <Component
-          {...(props as unknown as Props)}
-          style={
-            outerStyle && baseStyle
-              ? { ...baseStyle, ...outerStyle }
-              : outerStyle
-              ? outerStyle
-              : baseStyle
-          }
-          ref={ref}
-        />
-      );
-    });
+        return (
+          <Component
+            {...(props as unknown as Props)}
+            style={
+              outerStyle && baseStyle
+                ? { ...baseStyle, ...outerStyle }
+                : outerStyle
+                ? outerStyle
+                : baseStyle
+            }
+            ref={ref}
+          />
+        );
+      }
+    );
 
     return RefForwardingComponent;
   }
