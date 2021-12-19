@@ -4,7 +4,8 @@ import cssToRN from "css-to-react-native";
 import * as React from "react";
 import * as RN from "react-native";
 import type { O } from "ts-toolbelt";
-import type { JsonValue, ValueOf, PartialDeep } from "type-fest";
+import type { JsonValue, PartialDeep, ValueOf } from "type-fest";
+import memoize from "@essentials/memoize-one";
 
 const emptyObj = {};
 
@@ -51,6 +52,13 @@ export function createStyles<
     }
   }
 
+  function tokensAreEqual<Props extends {}>(
+    [t]: [ValueOf<Omit<VT, "default">>] | [ValueOf<Omit<VT, "default">>, Props],
+    [nt]: [ValueOf<Omit<VT, "default">>] | [ValueOf<Omit<VT, "default">>, Props]
+  ) {
+    return t === nt;
+  }
+
   const isAutoThemeable =
     Object.values(tokens).length === 3 && "light" in tokens && "dark" in tokens;
 
@@ -62,6 +70,8 @@ export function createStyles<
       | StyleCallback<S, ValueOf<Omit<VT, "default">>>,
     ...placeholders: string[]
   ): S {
+    literals = typeof literals === "function" ? memoize(literals) : literals;
+
     const styles = compileStyles(
       compileLiterals(literals, ...placeholders),
       tokens[currentTheme]
@@ -76,17 +86,29 @@ export function createStyles<
 
   const styles = {
     variants<T extends StyleMap<RNStyles, V>>(styleMap: T) {
+      const memoMap = {} as T;
+
+      for (const key in styleMap) {
+        // @ts-expect-error: key exists
+        memoMap[key] =
+          typeof styleMap[key] === "function"
+            ? // @ts-expect-error: is assignable
+
+              memoize(styleMap[key], tokensAreEqual)
+            : styleMap[key];
+      }
+
       // style('text', {})
       function style(...args: StyleArguments<Extract<keyof T, string>>) {
         const numArgs = args.length;
-        let sheet = styleMap.default
-          ? compileStyles(styleMap.default, tokens[currentTheme] as V)
+        let sheet = memoMap.default
+          ? compileStyles(memoMap.default, tokens[currentTheme] as V)
           : {};
 
         if (numArgs === 1 && typeof args[0] === "string") {
           sheet = {
             ...sheet,
-            ...compileStyles(styleMap[args[0]], tokens[currentTheme] as V),
+            ...compileStyles(memoMap[args[0]], tokens[currentTheme] as V),
           };
         } else if (numArgs > 0) {
           let i = 0;
@@ -99,14 +121,14 @@ export function createStyles<
             if (typeof arg === "string") {
               Object.assign(
                 sheet,
-                compileStyles(styleMap[arg], tokens[currentTheme] as V)
+                compileStyles(memoMap[arg], tokens[currentTheme] as V)
               );
             } else if (typeof arg === "object") {
               for (const key in arg)
                 if (arg[key])
                   Object.assign(
                     sheet,
-                    compileStyles(styleMap[key], tokens[currentTheme] as V)
+                    compileStyles(memoMap[key], tokens[currentTheme] as V)
                   );
             }
           }
@@ -117,7 +139,7 @@ export function createStyles<
           : sheet;
       }
 
-      style.styles = styleMap;
+      style.styles = memoMap;
       return style;
     },
     one<S extends RNStyles>(
@@ -128,7 +150,11 @@ export function createStyles<
         | StyleCallback<S, ValueOf<Omit<VT, "default">>>,
       ...placeholders: string[]
     ) {
-      const compiledLiterals = compileLiterals(literals, ...placeholders);
+      literals =
+        typeof literals === "function"
+          ? memoize(literals, tokensAreEqual)
+          : literals;
+      let compiledLiterals = compileLiterals(literals, ...placeholders);
 
       return function oneStyle(createStyle?: unknown): S {
         if (!createStyle && createStyle !== void 0) return emptyObj as S;
@@ -197,12 +223,42 @@ export function createStyles<
 
   function styled<StyleProps extends {}, Props extends {} = {}>(
     Component: React.ComponentType<Props>,
-    styles?: StyledValue<
+    baseStyles?: StyledValue<
       Omit<Props, keyof StyleProps> & StyleProps,
       "style" extends keyof Props ? Extract<Props["style"], {}> : RNStyles,
       ValueOf<Omit<VT, "default">>
-    >
+    >,
+    areEqual?:
+      | (keyof StyleProps)[]
+      | ((
+          [tokens, props]: [
+            ValueOf<Omit<VT, "default">>,
+            Omit<Props, keyof StyleProps> & StyleProps
+          ],
+          [nextTokens, nextProps]: [
+            ValueOf<Omit<VT, "default">>,
+            Omit<Props, keyof StyleProps> & StyleProps
+          ]
+        ) => boolean)
   ) {
+    const styles =
+      typeof baseStyles === "function" && areEqual
+        ? memoize(
+            baseStyles as StyledCallback<
+              Omit<Props, keyof StyleProps> & StyleProps,
+              RNStyles,
+              ValueOf<Omit<VT, "default">>
+            >,
+            Array.isArray(areEqual)
+              ? areEqual.length === 1
+                ? ([t, p], [nt, np]) =>
+                    t === nt && p[areEqual[0]] === np[areEqual[1]]
+                : ([t, p], [nt, np]) =>
+                    t === nt && areEqual.every((key) => p[key] === np[key])
+              : areEqual
+          )
+        : baseStyles;
+
     function compileRecursiveStyles(
       style: RN.RecursiveArray<StyleValue | Falsy> | StyleValue | Falsy,
       tokens: ValueOf<Omit<VT, "default">>
@@ -265,66 +321,8 @@ export function createStyles<
       );
     });
 
-    // if (process.env.NODE_ENV !== "production") {
-    //   RefForwardingComponent.displayName = `styled(${
-    //     Component.displayName ?? (Component.name || "Component")
-    //   })`;
-    // }
-
     return RefForwardingComponent;
   }
-
-  function wrapStyled<Props extends {}>(Component: React.ComponentType<Props>) {
-    return function styledWrapper<StyleProps extends {}>(
-      literals:
-        | TemplateStringsArray
-        | string
-        | ("style" extends keyof Props ? Extract<Props["style"], {}> : RNStyles)
-        | StyledCallback<
-            StyleProps,
-            "style" extends keyof Props
-              ? Extract<Props["style"], RNStyles>
-              : RNStyles,
-            ValueOf<Omit<VT, "default">>
-          >,
-      ...placeholders: string[]
-    ) {
-      return styled<StyleProps, Props>(
-        Component,
-        Array.isArray(literals)
-          ? compileLiterals(
-              literals as unknown as TemplateStringsArray,
-              ...placeholders
-            )
-          : (literals as any)
-      );
-    };
-  }
-
-  styled.ActivityIndicator = wrapStyled(RN.ActivityIndicator);
-  styled.DrawerLayoutAndroid = wrapStyled(RN.DrawerLayoutAndroid);
-  styled.FlatList = wrapStyled(RN.FlatList);
-  styled.Image = wrapStyled(RN.Image);
-  styled.ImageBackground = wrapStyled(RN.ImageBackground);
-  styled.KeyboardAvoidingView = wrapStyled(RN.KeyboardAvoidingView);
-  styled.Modal = wrapStyled(RN.Modal);
-  styled.NavigatorIOS = wrapStyled(RN.NavigatorIOS);
-  styled.RecyclerViewBackedScrollView = wrapStyled(
-    RN.RecyclerViewBackedScrollView
-  );
-  styled.RefreshControl = wrapStyled(RN.RefreshControl);
-  styled.SafeAreaView = wrapStyled(RN.SafeAreaView);
-  styled.ScrollView = wrapStyled(RN.ScrollView);
-  styled.SectionList = wrapStyled(RN.SectionList);
-  styled.SnapshotViewIOS = wrapStyled(RN.SnapshotViewIOS);
-  styled.Switch = wrapStyled(RN.Switch);
-  styled.Text = wrapStyled(RN.Text);
-  styled.TextInput = wrapStyled(RN.TextInput);
-  styled.TouchableHighlight = wrapStyled(RN.TouchableHighlight);
-  styled.TouchableNativeFeedback = wrapStyled(RN.TouchableNativeFeedback);
-  styled.TouchableOpacity = wrapStyled(RN.TouchableOpacity);
-  styled.TouchableWithoutFeedback = wrapStyled(RN.TouchableWithoutFeedback);
-  styled.View = wrapStyled(RN.View);
 
   return {
     styles,
@@ -414,7 +412,8 @@ export function createStyles<
                   ) as VT[keyof VT];
 
                   if (themeName !== "default") {
-                    tokens[themeName as keyof VT] = mergeTokens(
+                    // @ts-expect-error: not sure
+                    tokens[themeName] = mergeTokens(
                       tokens[themeName as keyof VT],
                       themes[themeName]
                     );

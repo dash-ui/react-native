@@ -837,6 +837,56 @@ describe("styled()", () => {
     });
   });
 
+  it("should memoize lazily evaluate styles w/ callback", () => {
+    const fontSizes = { xs: 12, sm: 14 };
+    const StyledText = styled(
+      RN.Text,
+      (t, p: { size: keyof typeof fontSizes }) => ({
+        color: t.colors.primaryText,
+        fontSize: fontSizes[p.size],
+      }),
+      ([t, p], [nt, np]) => t === nt && p.size === np.size
+    );
+    const view = render(<StyledText size="sm" testID="test" />);
+
+    expect(view.getByTestId("test")).toHaveStyle({
+      color: "black",
+      fontSize: 14,
+    });
+
+    const viewB = render(<StyledText size="sm" testID="test" />);
+
+    expect(viewB.getByTestId("test")).toHaveStyle({
+      color: "black",
+      fontSize: 14,
+    });
+  });
+
+  it("should memoize lazily evaluate styles w/ array", () => {
+    const fontSizes = { xs: 12, sm: 14 };
+    const StyledText = styled(
+      RN.Text,
+      (t, p: { size: keyof typeof fontSizes }) => ({
+        color: t.colors.primaryText,
+        fontSize: fontSizes[p.size],
+      }),
+      ["size"]
+    );
+    const view = render(<StyledText size="sm" testID="test" />);
+
+    expect(view.getByTestId("test")).toHaveStyle({
+      color: "black",
+      fontSize: 14,
+    });
+
+    const viewB = render(<StyledText size="sm" testID="test" />);
+
+    expect(viewB.getByTestId("test")).toHaveStyle({
+      color: "black",
+      fontSize: 14,
+    });
+  });
+
   it("should lazily evaluate composed styles", () => {
     const fontSizes = { xs: 12, sm: 14 };
     const StyledText_ = styled<{ size?: keyof typeof fontSizes }, RN.TextProps>(
@@ -898,71 +948,6 @@ describe("styled()", () => {
     );
     expect(view.getByText("Hello")).toHaveStyle({
       fontWeight: "bold",
-    });
-  });
-});
-
-describe("styled.View()", () => {
-  const { styled } = createStyles({
-    tokens: {
-      colors: {
-        primary: "white",
-        secondary: "black",
-      },
-    },
-  });
-
-  it("should add default styles w/ template syntax", () => {
-    const StyledView = styled.View`
-      background-color: white;
-    `;
-    const view = render(<StyledView testID="test" />);
-    expect(view.getByTestId("test")).toHaveStyle({
-      backgroundColor: "white",
-    });
-  });
-
-  it("should add default styles w/ string syntax", () => {
-    const StyledView = styled.View(`
-      background-color: white;
-    `);
-    const view = render(<StyledView testID="test" />);
-    expect(view.getByTestId("test")).toHaveStyle({
-      backgroundColor: "white",
-    });
-  });
-
-  it("should add default styles w/ object syntax", () => {
-    const StyledView = styled.View({
-      backgroundColor: "white",
-    });
-    const view = render(<StyledView testID="test" />);
-    expect(view.getByTestId("test")).toHaveStyle({
-      backgroundColor: "white",
-    });
-  });
-
-  it("should add default styles w/ function syntax", () => {
-    const StyledView = styled.View(
-      ({ colors }) => `
-        background-color: ${colors.primary};
-      `
-    );
-    const view = render(<StyledView testID="test" />);
-    expect(view.getByTestId("test")).toHaveStyle({
-      backgroundColor: "white",
-    });
-  });
-
-  it("should create styles from props", () => {
-    const StyledView = styled.View(
-      ({ colors }, props: { backgroundColor: "primary" | "secondary" }) => `
-        background-color: ${colors[props.backgroundColor]};
-      `
-    );
-    const view = render(<StyledView backgroundColor="primary" testID="test" />);
-    expect(view.getByTestId("test")).toHaveStyle({
-      backgroundColor: "white",
     });
   });
 });
