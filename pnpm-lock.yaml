@@ -35,6 +35,7 @@ specifiers:
   typescript: latest
 
 dependencies:
+  '@dash-ui/styles': 1.0.0-alpha.13
   '@essentials/memoize-one': 1.1.0
   '@types/clone-deep': 4.0.1
   '@types/css-to-react-native': 3.0.0
@@ -46,7 +47,6 @@ dependencies:
 devDependencies:
   '@commitlint/cli': 15.0.0
   '@commitlint/config-conventional': 15.0.0
-  '@dash-ui/styles': 1.0.0-alpha.13
   '@semantic-release/changelog': 6.0.1
   '@semantic-release/git': 10.0.1
   '@swc-node/core': 1.8.2
@@ -1730,15 +1730,15 @@ packages:
       '@dash-ui/unitless': 2.0.0
       csstype: 3.0.10
       ts-toolbelt: 9.6.0
-    dev: true
+    dev: false
 
   /@dash-ui/stylis/1.0.5:
     resolution: {integrity: sha512-7G2I1tqfIcBNyegJeORLapdsfAVSQiuoyyp725K+FBSemWNOaVMTrtRE7us1HFbAN+CP1S88vSDcKcKxgNBuxw==}
-    dev: true
+    dev: false
 
   /@dash-ui/unitless/2.0.0:
     resolution: {integrity: sha512-FDcgXkug3IAI/CzgS9eENOHdb44fJnOYX2Tn6c5hvAQWWSklJU7S2G/yvATFDORtgESLBwIgn118rq/YRxohzw==}
-    dev: true
+    dev: false
 
   /@endemolshinegroup/cosmiconfig-typescript-loader/3.0.2_71a2f61964e37a4d68dab6dadd2a99a0:
     resolution: {integrity: sha512-QRVtqJuS1mcT56oHpVegkKBlgtWjXw/gHNWO3eL9oyB5Sc7HBoc2OLG/nYpVfT/Jejvo3NUrD0Udk7XgoyDKkA==}
@@ -4368,7 +4368,6 @@ packages:
 
   /csstype/3.0.10:
     resolution: {integrity: sha512-2u44ZG2OcNUO9HDp/Jl8C07x6pU/eTR3ncV91SiK3dhG9TWvRVsCoJw14Ckx5DgWkzGA3waZWO3d7pgqpUI/XA==}
-    dev: true
 
   /cz-conventional-changelog/3.2.0:
     resolution: {integrity: sha512-yAYxeGpVi27hqIilG1nh4A9Bnx4J3Ov+eXy4koL3drrR+IO9GaWPsKjik20ht608Asqi8TQPf0mczhEeyAtMzg==}
@@ -9681,6 +9680,7 @@ packages:
 
   /ts-toolbelt/9.6.0:
     resolution: {integrity: sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==}
+    dev: false
 
   /tsconfig-paths/3.12.0:
     resolution: {integrity: sha512-e5adrnOYT6zqVnWqZu7i/BQ3BnhzvGbjEjejFXO20lKIKpwTaupkCPgEfv4GZK1IBciJUEhYs3J3p75FdaTFVg==}

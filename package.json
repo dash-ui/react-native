@@ -31,6 +31,7 @@
   "sideEffects": false,
   "types": "types/index.d.ts",
   "dependencies": {
+    "@dash-ui/styles": "^1.0.0-alpha.13",
     "@essentials/memoize-one": "^1.1.0",
     "@types/clone-deep": "^4.0.1",
     "@types/css-to-react-native": "^3.0.0",
