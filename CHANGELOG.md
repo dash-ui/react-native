@@ -1,3 +1,15 @@
+## [2.0.1](https://github.com/dash-ui/react-native/compare/v2.0.0...v2.0.1) (2021-12-19)
+
+
+### Bug Fixes
+
+* fix broken lint command ([86a54a8](https://github.com/dash-ui/react-native/commit/86a54a81af7f241e294569d656662cd112a903ec))
+
+
+### Performance Improvements
+
+* memoize callback styles ([1d13713](https://github.com/dash-ui/react-native/commit/1d137134c13e8724c213d07d72774e80b04263d7))
+
 # [2.0.0](https://github.com/dash-ui/react-native/compare/v1.5.0...v2.0.0) (2021-12-18)
 
 
