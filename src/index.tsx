@@ -99,7 +99,9 @@ export function createStyles<
       }
 
       // style('text', {})
-      function style(...args: StyleArguments<Extract<keyof T, string>>) {
+      function style(
+        ...args: StyleArguments<Extract<keyof T, string | number>>
+      ) {
         const numArgs = args.length;
         let sheet = memoMap.default
           ? compileStyles(memoMap.default, tokens[currentTheme] as V)
@@ -554,9 +556,9 @@ export interface CreateStylesOptions<
 
 export type StyleMap<
   S extends RNStyles,
-  V extends Record<string, unknown> = DashTokens
+  V extends Record<string | number, unknown> = DashTokens
 > = {
-  [name: string]: string | StyleCallback<S, V> | StyleObject<S>;
+  [name: string | number]: string | StyleCallback<S, V> | StyleObject<S>;
 };
 
 export type StyleValue<

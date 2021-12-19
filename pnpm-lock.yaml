@@ -3,7 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@commitlint/cli': latest
   '@commitlint/config-conventional': latest
-  '@dash-ui/styles': ^0.8.9
+  '@dash-ui/styles': ^1.0.0-alpha.13
   '@essentials/memoize-one': ^1.1.0
   '@semantic-release/changelog': ^6.0.1
   '@semantic-release/git': ^10.0.1
@@ -46,7 +46,7 @@ dependencies:
 devDependencies:
   '@commitlint/cli': 15.0.0
   '@commitlint/config-conventional': 15.0.0
-  '@dash-ui/styles': 0.8.9
+  '@dash-ui/styles': 1.0.0-alpha.13
   '@semantic-release/changelog': 6.0.1
   '@semantic-release/git': 10.0.1
   '@swc-node/core': 1.8.2
@@ -1723,12 +1723,13 @@ packages:
       chalk: 4.1.2
     dev: true
 
-  /@dash-ui/styles/0.8.9:
-    resolution: {integrity: sha512-hd5p763uzIFCJl0AMcH53QqkViv5Y1cn72FZDPggh0sInoHsG+/la0HhhkqneFiDB0rYUs+OeY8OJgxR1enXYA==}
+  /@dash-ui/styles/1.0.0-alpha.13:
+    resolution: {integrity: sha512-Y+wTlPVduBT6hLBp+CJFtGZhNRjx9SpOEhoGw5cm9rHGPUJh+wf/hcCV2sqXTvjwDxBRJLJ06Ti8fOnxNL2VaA==}
     dependencies:
       '@dash-ui/stylis': 1.0.5
       '@dash-ui/unitless': 2.0.0
       csstype: 3.0.10
+      ts-toolbelt: 9.6.0
     dev: true
 
   /@dash-ui/stylis/1.0.5:
@@ -9680,7 +9681,6 @@ packages:
 
   /ts-toolbelt/9.6.0:
     resolution: {integrity: sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==}
-    dev: false
 
   /tsconfig-paths/3.12.0:
     resolution: {integrity: sha512-e5adrnOYT6zqVnWqZu7i/BQ3BnhzvGbjEjejFXO20lKIKpwTaupkCPgEfv4GZK1IBciJUEhYs3J3p75FdaTFVg==}
