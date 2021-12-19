@@ -14,7 +14,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
 }>(options?: CreateStylesOptions<V, T>): {
     readonly styles: {
         readonly variants: <T_1 extends StyleMap<RNStyles, V>>(styleMap: T_1) => {
-            (...args: StyleArguments<Extract<keyof T_1, string>>): RN.ViewStyle | RN.ImageStyle;
+            (...args: StyleArguments<Extract<keyof T_1, string | number>>): RN.ViewStyle | RN.ImageStyle;
             styles: T_1;
         };
         readonly one: <S extends RNStyles>(literals: string | TemplateStringsArray | S | StyleCallback<S, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => (createStyle?: unknown) => S;
@@ -31,7 +31,7 @@ export declare function createStyles<V extends Record<string, unknown> = DashTok
     readonly useDash: () => {
         styles: {
             readonly variants: <T_1 extends StyleMap<RNStyles, V>>(styleMap: T_1) => {
-                (...args: StyleArguments<Extract<keyof T_1, string>>): RN.ViewStyle | RN.ImageStyle;
+                (...args: StyleArguments<Extract<keyof T_1, string | number>>): RN.ViewStyle | RN.ImageStyle;
                 styles: T_1;
             };
             readonly one: <S extends RNStyles>(literals: string | TemplateStringsArray | S | StyleCallback<S, ValueOf<Omit<VT, "default">, Exclude<keyof VT, "default">>>, ...placeholders: string[]) => (createStyle?: unknown) => S;
@@ -69,8 +69,8 @@ export interface CreateStylesOptions<V extends DashTokens = DashTokens, T extend
         [Name in keyof T]: T[Name];
     };
 }
-export declare type StyleMap<S extends RNStyles, V extends Record<string, unknown> = DashTokens> = {
-    [name: string]: string | StyleCallback<S, V> | StyleObject<S>;
+export declare type StyleMap<S extends RNStyles, V extends Record<string | number, unknown> = DashTokens> = {
+    [name: string | number]: string | StyleCallback<S, V> | StyleObject<S>;
 };
 export declare type StyleValue<S extends RNStyles = RNStyles, V extends Record<string, unknown> = DashTokens> = string | StyleCallback<S, V> | StyleObject<S>;
 export declare type StyleObject<S extends RNStyles = RNStyles> = S;

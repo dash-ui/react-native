@@ -1,3 +1,11 @@
+## [2.0.2](https://github.com/dash-ui/react-native/compare/v2.0.1...v2.0.2) (2021-12-19)
+
+
+### Bug Fixes
+
+* fix dependencies ([2393358](https://github.com/dash-ui/react-native/commit/2393358ef9cbc17392df61605ec32ba1caf5d29c))
+* fix typings ([955d876](https://github.com/dash-ui/react-native/commit/955d876ba8e1a4fafe4f3a4d9c0d1ae286bfd7a9))
+
 ## [2.0.1](https://github.com/dash-ui/react-native/compare/v2.0.0...v2.0.1) (2021-12-19)
 
 
