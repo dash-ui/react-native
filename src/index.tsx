@@ -70,8 +70,6 @@ export function createStyles<
       | StyleCallback<S, ValueOf<Omit<VT, "default">>>,
     ...placeholders: string[]
   ): S {
-    literals = typeof literals === "function" ? memoize(literals) : literals;
-
     const styles = compileStyles(
       compileLiterals(literals, ...placeholders),
       tokens[currentTheme]
