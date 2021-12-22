@@ -1,3 +1,10 @@
+## [2.0.3](https://github.com/dash-ui/react-native/compare/v2.0.2...v2.0.3) (2021-12-22)
+
+
+### Bug Fixes
+
+* remove unnecessary memoization ([69b7123](https://github.com/dash-ui/react-native/commit/69b71230bc60cffff4e4fa90f12965c1c1ac15b9))
+
 ## [2.0.2](https://github.com/dash-ui/react-native/compare/v2.0.1...v2.0.2) (2021-12-19)
 
 
